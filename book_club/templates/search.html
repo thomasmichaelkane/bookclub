@@ -16,6 +16,7 @@
                 <div>
                     <div class="card-deck">
                         {% set image = book_api["cover_url_m"] %}
+                        {% set olid = book_api["olid"] %}
                         <!-- BOOK-->
                         <div class="card border-dark mb-3">
                         <div class="d-flex justify-content-center">
@@ -27,20 +28,20 @@
                         </div>
                         <div class="card-footer">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <form action="{{ url_for('views.add_book') }}" method="POST"></form>
-                                    <button class="btn btn-info btn-md" type="submit" name="read" value="{{ book_api }}">Start Reading</button>
-                                </form>
-                                <form action="{{ url_for('views.add_book') }}" method="POST"></form>
-                                    <button class="btn btn-info btn-md" type="submit" name="wish" value="{{ book_api }}">Add to Wishlist</button>
-                                </form>
                                 {% if exists %}
-                                    <button class="btn btn-success btn-md">
+                                    <a class="btn btn-success btn-md" href="{{ url_for('views.book', book_id=book.id) }}">
+                                        Go to book
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                             <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
                                         </svg>
-                                    </button>
+                                    </a>
+                                {% else %}
+                                    <form action="{{ url_for('actions.add_book') }}" method="POST">
+                                        <button class="btn btn-info btn-md" type="submit" name="add" value="{{ olid }}">Add</button>
+                                    </form>
                                 {% endif %}
+
                             </div>
                         </div>
                         </div>

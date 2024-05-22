@@ -1,11 +1,9 @@
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from book_club import db
 from book_club.models import Book, Review, User
 from book_club.forms import BookForm, ReviewForm
-from book_club.book_func import book_in_lists
-from book_club.aiapi import create_by_reading_prompt, rec_test, response_test
-from book_club.retr import search_book
+from book_club.library import search_book
 
 views = Blueprint('views', __name__)
 
@@ -32,36 +30,22 @@ def home():
 def reccomend():
     return render_template('reccomend.html', response=[])
 
-## RECCOMEND METHODS ##
-@views.route('/rec_prompt', methods=['POST'])
+## USER PAGE ##
+@views.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
-def rec_prompt():
+def user(user_id):
     
-    if request.method == 'POST':
-        
-        response = response_test()
+    user = User.query.get_or_404(user_id)
     
-    return render_template('reccomend.html', user=current_user, response=response)
+    print(user)
+    
+    return render_template('user.html', user=user)
 
-@views.route('/find_book', methods=['POST'])
+## MY LIBRARY PAGE ##
+@views.route('/my-library', methods=['GET', 'POST'])
 @login_required
-def find_book():
-    
-    if request.method == 'POST':
-        
-        rec_info = request.form.get('rec')
-        rec_title = rec_info[0]
-        rec_author = rec_info[1]
-        
-        book_info = search_book(rec_title, rec_author)
-        
-        print(book_info)
-
-## MY BOOKS PAGE ##
-@views.route('/my-books', methods=['GET', 'POST'])
-@login_required
-def my_books():
-    return render_template('my_books.html')
+def my_library():
+    return render_template('user.html', user=current_user)
 
 ## SEARCH PAGE ##
 @views.route('/search', methods=['GET', 'POST'])
@@ -74,42 +58,14 @@ def search():
         
         if book_api is not None:
             book_api_olid = book_api["olid"]
-            exists = bool(Book.query.filter_by(olid=book_api_olid).first())
-    
-        return render_template('search.html', form=form, book_api=book_api, exists=exists)
+            book = Book.query.filter_by(olid=book_api_olid).first()
+            exists = bool(book)
+
+        if exists:
+            return render_template('search.html', form=form, book=book, book_api=book_api, exists=exists)
+        else:
+            return render_template('search.html', form=form, book_api=book_api, exists=exists)
     return render_template('search.html', form=form)
-
-## ADD BOOK PAGE ##
-@views.route('/add-book', methods=['GET', 'POST'])
-@login_required
-def add_book(book_info):
-    
-    if request.method == 'POST':
-        
-        book_info = request.form.get('rec')
-    
-        search_olid = book_info["openlib_api_info"]["olid"]
-        exists = bool(Book.query.filter_by(olid=search_olid).first())
-        
-        print(exists)
-        
-        if exists is not True:
-        
-            book = Book(title=book_info["title"], 
-                        author=book_info["author"], 
-                        olid=book_info["olid"],
-                        cover_url_s=book_info["cover_url_s"], 
-                        cover_url_m=book_info["cover_url_m"],
-                        cover_url_l=book_info["cover_url_l"])
-
-            db.session.add(book)
-        
-        current_user.books_wishlist.append(book)
-        db.session.commit()
-        
-        flash(f'{book_info["title"]} added to your wishlist!', category='success')
-
-        return redirect(url_for('views.add_book'))
 
 ## BOOK PAGE ##
 @views.route('/book/<int:book_id>', methods=['GET', 'POST'])
@@ -141,77 +97,7 @@ def book(book_id):
     return render_template('book.html', book=book, form=form)
 
 ## BOOK METHODS ##
-@views.route('/finish-book', methods=['POST'])
-@login_required
-def finish_book():
-    
-    if request.method == 'POST':
-        
-        book_id = request.form.get('finish')
-        book = Book.query.get_or_404(book_id)
-        
-        if current_user in book.users_reading:
-            current_user.books_reading.remove(book)
-        if current_user in book.users_wish:
-            current_user.books_wish.remove(book)
-        if current_user not in book.users_read:
-            current_user.books_read.append(book)
-        db.session.commit()
-        
-        form = ReviewForm()
-    
-        return render_template('book.html', book=book, form=form)
 
-@views.route('/start-book', methods=['POST'])
-@login_required
-def start_book():
-    
-    if request.method == 'POST':
-
-        book_id = request.form.get('start')
-        book = Book.query.get_or_404(book_id)
-        
-        if current_user in book.users_wish:
-            current_user.books_wish.remove(book)
-        
-        if current_user not in book.users_reading:
-            current_user.books_reading.append(book)
-       
-        db.session.commit()
-    
-        book = Book.query.get_or_404(book_id)
-        return render_template('book.html', book=book, form=None)
-
-@views.route('/shelve-book', methods=['POST'])
-@login_required
-def shelve_book():
-    
-    if request.method == 'POST':
-        book_id = request.form.get('shelve')
-        book = Book.query.get_or_404(book_id)
-        
-        if current_user in book.users_reading:
-            current_user.books_reading.remove(book)
-        if current_user in book.users_wish:
-            current_user.books_wish.remove(book)
-            
-        db.session.commit()
-    
-        book = Book.query.get_or_404(book_id)
-        return render_template('book.html', book=book, form=None)
-
-
-@views.route('/wishlist-book', methods=['POST'])
-@login_required
-def wishlist_book():
-    
-    if request.method == 'POST':
-        book_id = request.form.get('wish')
-        book = Book.query.get_or_404(book_id)
-        current_user.books_wish.append(book)
-        db.session.commit()
-    
-        return render_template('/book.html', book=book, form=None)
 
 # @views.route('/review-book', methods=['POST'])
 # @login_required

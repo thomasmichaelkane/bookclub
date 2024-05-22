@@ -45,11 +45,6 @@
   </div>
   <div class="row mt-5">
     <div class="col">
-      {% if form != None %}
-        <div class="review-write-section m-3">
-          {{ render_partial('shared/partials/forms/review_form.html', form=form) }}
-        </div>
-      {% endif %}
       <div class="reviews-section m-3">
         <!-- Placeholder for reviews -->
         {% for review in book.reviews|reverse %}
@@ -65,6 +60,15 @@
     </div>
   </div>
 </div>
+
+<!-- 
+{% if form != None %}
+<div class="review-write-section m-3">
+  {{ render_partial('shared/partials/forms/review_form.html', form=form) }}
+</div>
+{% endif %} -->
+
+
 
 
 <!-- </br>

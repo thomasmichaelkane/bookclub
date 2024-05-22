@@ -1,0 +1,9 @@
+<div class="position-relative">
+  <a href="{{ url_for('views.book', book_id=book.id) }}" class="stretched-link">
+      <!-- Div surrounding a heading -->
+      <div class="d-inline-block p-2 bg-primary text-white">
+        <h2>{{ book.title }}</h2>
+        <h3>{{ book.author }}</h23>
+      </div>
+  </a>
+</div>

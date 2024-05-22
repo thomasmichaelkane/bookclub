@@ -3,16 +3,39 @@ import lorem
 
 from book_club import app, db, bcrypt, DB_NAME
 from book_club.models import User, Book, Review
-from book_club.retr import search_book
+from book_club.library import search_book
 
 def create_database():
     if not path.exists('flask_web/' + DB_NAME):
         with app.app_context():
             db.create_all()
             
-        add_dummy()
+        add_dummy_data()
         
-def add_books():
+def dummy_users():
+    
+    admin_hashed_password = bcrypt.generate_password_hash("yatch").decode('utf-8')
+    dummy_hashed_password = bcrypt.generate_password_hash("ciao").decode('utf-8')
+    
+    users=[User(email="admin@example.com", 
+                    username="admin", 
+                    password=admin_hashed_password),
+           User(email="dummy1@example.com", 
+                        username="dummy1", 
+                        password=dummy_hashed_password),
+           User(email="dummy2@example.com", 
+                        username="dummy2", 
+                        password=dummy_hashed_password),
+           User(email="dummy3@example.com", 
+                        username="dummy3", 
+                        password=dummy_hashed_password),
+           User(email="dummy4@example.com", 
+                        username="dummy4", 
+                        password=dummy_hashed_password)]
+            
+    return users
+        
+def dummy_books():
     
     books_api_info = []
     
@@ -49,47 +72,24 @@ def add_books():
                   cover_url_m=book_info["cover_url_m"],
                   cover_url_l=book_info["cover_url_l"]) for book_info in books_api_info]
     
-    print(books)
-    
     return books
 
 def add_review(user, book):
     
     review = Review(content=lorem.paragraph(), author=user, book=book)
     db.session.add(review)
-            
-def add_dummy():
+
+def add_dummy_data():
     
     with app.app_context():
     
-        admin_hashed_password = bcrypt.generate_password_hash("yatch").decode('utf-8')
-        dummy_hashed_password = bcrypt.generate_password_hash("ciao").decode('utf-8')
+        users = dummy_users()
         
-        users=[User(email="admin@example.com", 
-                        username="admin", 
-                        password=admin_hashed_password),
-        User(email="dummy1@example.com", 
-                        username="dummy1", 
-                        password=dummy_hashed_password),
-        User(email="dummy2@example.com", 
-                        username="dummy2", 
-                        password=dummy_hashed_password),
-        User(email="dummy3@example.com", 
-                        username="dummy3", 
-                        password=dummy_hashed_password),
-        User(email="dummy4@example.com", 
-                        username="dummy4", 
-                        password=dummy_hashed_password)]
+        [db.session.add(user) for user in users]
         
-
+        books = dummy_books()
         
-        for user in users:
-            db.session.add(user)
-        
-        books = add_books()
-        
-        for book in books:
-            db.session.add(book)
+        [db.session.add(book) for book in books]
         
         for i in range(1,15):
             users[0].books_read.append(books[i])

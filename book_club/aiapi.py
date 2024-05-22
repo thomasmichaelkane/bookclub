@@ -1,10 +1,7 @@
 from flask_login import current_user
-from book_club import db
-from book_club.retr import search_book
+from book_club.library import search_book
 from openai import OpenAI
-# import config
 import re
-
 
 def create_by_reading_prompt():
     
