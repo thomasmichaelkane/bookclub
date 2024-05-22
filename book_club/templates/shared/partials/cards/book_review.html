@@ -1,0 +1,11 @@
+<!-- BOOK-->
+<div class="card border-dark mb-3 {{ book_status }}" style="width: 15rem">
+  <div class="card-block text-dark" >
+    <h5 class="card-title">{{ book.title }}</h5>
+    <h6 class="card-subtitle">{{ book.author }}</h6>
+    <div class="card-body">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ipsum dolor, dignissim ac odio sit amet, blandit vestibulum erat. Aenean elit massa, sagittis a scelerisque eget, sollicitudin sit amet leo. Nunc scelerisque felis et odio lacinia condimentum. Nam vehicula justo eros, id eleifend eros hendrerit vel. 
+    </div>
+    <a class="stretched-link" href="{{ url_for('views.book', book_id=book.id) }}"></a>
+  </div>
+</div>

@@ -1,0 +1,73 @@
+{% extends "base.html" %}{% block title %}My Books{% endblock %}
+
+{% block content %}
+<h1 align="center">My books</h1>
+
+<div class="info-section">
+  <div class="row">
+    <div class="col-md-4">
+      <h3>Reading</h3>
+      <div class="container-fluid min-vh-25">
+        <div class="card-deck">
+          {% for book in current_user.books_reading %}
+            {{ render_partial('shared/partials/cards/book_card.html', book=book) }}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      {% set n_books_read = current_user.books_read|length %}
+      {% set n_reviews = current_user.reviews|length %}
+      <div class="row h-75 w-100">
+        <div class="col">
+          <h3>Total books read: {{ n_books_read }}</h3>
+        </div>
+        <div class="col">
+          <h3>Reviews written: {{ n_reviews }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+</div class="books-section m-4">
+  <div class="wishlist-section">
+    <h3>Wishlist</h3>
+    <div class="container-fluid min-vh-25">
+      <div class="card-deck">
+        {% for book in current_user.books_wishlist %}
+          {{ render_partial('shared/partials/cards/book_card.html', book=book) }}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="read-section">
+    <h3>Read</h3>
+    <div class="container-fluid min-vh-25">
+      <div class="card-deck">
+        {% for book in current_user.books_read %}
+            {{ render_partial('shared/partials/cards/book_card.html', book=book) }}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+{% endblock %}
+
+
+
+<!-- <ul class="list-group list-group-flush" id="books">
+    {% for book in current_user.books_reading %}
+    <li class="list-group-item">
+        {{ book.title }} - {{ book.author }}
+        <form action="{{ url_for('views.finish_book') }}" method="POST">
+            <input type="submit" name="finish" value="{{ book.id }}">Finish</input>
+        </form>
+        <form action="{{ url_for('views.remove_book') }}" method="POST">
+            <input type="submit" name="remove" value="{{ book.id }}">Remove</input>
+        </form>
+    </li>        
+    {% endfor %}
+</ul> -->

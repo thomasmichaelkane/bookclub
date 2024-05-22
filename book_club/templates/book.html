@@ -1,0 +1,87 @@
+{% extends "base.html" %}{% block title %}Book{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-2">
+      <!-- Placeholder for book cover image -->
+      <img src="{{ book.cover_url_l }}", alt="cover" height="300">
+    </div>
+    <div class="col-md-8">
+      <div class="book-details">
+        <!-- Placeholder for book title -->
+        <h2 class="book-title-placeholder mb-3">{{ book.title }}</h2>
+        <!-- Placeholder for book author -->
+        <h4 class="book-author-placeholder mb-3">{{ book.author }}</h4>
+        <!-- Placeholder for book description -->
+        <p class="book-description-placeholder">description</p>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="rating">
+        <h1>3.7</h1>
+      </div>
+      <div class="status">
+        {% if current_user in book.users_read %}
+          <h3>Read</h3>
+        {% elif current_user in book.users_reading %}
+          <h3>Reading</h3>
+          {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}
+          {{ render_partial('shared/partials/buttons/shelve_book.html', book=book) }}
+        {% elif current_user in book.users_wish %}
+          <h3>In wishlist</h3>
+          {{ render_partial('shared/partials/buttons/start_book.html', book=book) }}
+          {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}
+          {{ render_partial('shared/partials/buttons/shelve_book.html', book=book) }}
+        {% else %}
+          <h3>On shelf</h3>
+          {{ render_partial('shared/partials/buttons/wishlist_book.html', book=book) }}
+          {{ render_partial('shared/partials/buttons/start_book.html', book=book) }}
+          {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col">
+      {% if form != None %}
+        <div class="review-write-section m-3">
+          {{ render_partial('shared/partials/forms/review_form.html', form=form) }}
+        </div>
+      {% endif %}
+      <div class="reviews-section m-3">
+        <!-- Placeholder for reviews -->
+        {% for review in book.reviews|reverse %}
+          <div class="row">
+            <div class="review-placeholder p-3">
+              <!-- Individual review placeholder -->
+              <div class="review-title-placeholder">{{ review.author.username }}</div>
+              <div class="review-content-placeholder">{{ review.content }}</div>
+            </div>
+          </div> 
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- </br>
+<div class="container">
+  <div class="card border-dark mb-3" style="max-width: 18rem;">
+    <div class="card-body text-dark">
+      <div class="row">
+        <div class="col">
+          <img src="{{ book.cover_url_l }}", alt="cover" width="100">
+        </div>
+        <div class="col">
+          <h3 class="card-title">{{ book.title }}</h3>
+          <h4 class="card-title">by {{ book.author }}</h4>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">Footer</div>
+  </div>
+</div> -->
+{% endblock %}

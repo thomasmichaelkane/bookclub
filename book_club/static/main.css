@@ -1,0 +1,111 @@
+:root {
+  --em-blue: #D7E2DC;
+  --em-gray: #F8EDEB;
+  --em-pink: #FAE1DD;
+  --em-green: #DED5CE;
+  --em-coral: #FEC5BA;
+  --em-yellow: #F5EBE1;
+}
+
+.band
+{
+  min-height: 150px;
+}
+
+.card-deck
+{
+  min-height: 150px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.user-band
+{
+  background-color: lightgreen;
+}
+
+.user-review-band
+{
+  background-color: rgb(173, 226, 173);
+}
+
+.book-band
+{
+  background-color: lightyellow;
+}
+
+.book-read
+{
+  /* background-color: lightskyblue; */
+  border-color: rgb(155, 178, 222);
+}
+
+.book-reading
+{
+  /* background-color: lightcoral; */
+  border-color: rgb(68, 126, 233);
+  border-width: 4px;
+}
+
+.page-content
+{
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.grid-container
+{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.book-card
+{
+    background-color: lightcyan;
+}
+
+.read-button
+{
+    width: 80px;
+}
+
+.finished-block
+{
+    background-color: darkgreen;
+}
+
+.reading-block
+{
+    background-color: darkgoldenrod;
+}
+
+#books-grid {
+  height: 20vh;
+  transition: 500ms;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3px;
+  background: crimson;
+}
+
+:where(.left, .center, .right) {
+  background: navajowhite;
+  transition: 300ms;
+}
+
+:where(.left, .center, .right):hover {
+  background: crimson;
+}
+
+#books-grid:has(.left:hover) {
+  grid-template-columns: 2fr 0.5fr 0.5fr;
+}
+
+#books-grid:has(.center:hover) {
+  grid-template-columns: 0.5fr 2fr 0.5fr;
+}
+#books-grid:has(.right:hover) {
+  grid-template-columns: 0.5fr 0.5fr 2fr;
+}

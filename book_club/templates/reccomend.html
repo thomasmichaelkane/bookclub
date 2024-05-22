@@ -1,0 +1,59 @@
+{% extends "base.html" %}{% block title %}Reccomend{% endblock %}
+
+{% block content %}
+<div class="container page-content">
+  <div>
+      <form action="{{ url_for('views.rec_prompt') }}" method="POST">
+          <button class="btn btn-primary btn-md" name="rec-by-reading">Reccomend</button>
+      </form>
+  </div>
+  <div>
+    {% if response|length > 0 %}
+    <div>
+      {% set intro = response[0] %}
+      <p class="card-content">{{ intro }}</p>
+    </div>
+    <div>
+      {% set book_recs = response[2] %}
+      <div class="card-deck">
+        {% for book_rec in book_recs %}
+          {% if book_rec["openlib_found"] %}
+            {% set image = book_rec["openlib_api_info"]["cover_url_m"] %}
+          {% else %}
+            {% set image = "https://ia803200.us.archive.org/view_archive.php?archive=/23/items/m_covers_0009/m_covers_0009_27.zip&file=0009273490-M.jpg" %}
+          {% endif %}
+          
+          <!-- BOOK-->
+          <div class="card border-dark mb-3">
+            <div class="d-flex justify-content-center">
+              <img src="{{ image }}" alt="">
+            </div>
+            <div class="card-body text-dark">
+              <h5 class="card-title">{{ book_rec["title"] }}</h5>
+              <h6 class="card-subtitle">{{ book_rec["author"] }}</h6>
+              <p class="card-content">{{ book_rec["description"] }}</p>
+            </div>
+            <div class="card-footer">
+              {% if book_rec["openlib_found"] %}
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <form action="{{ url_for('views.find_book') }}" method="POST"></form>
+                    <button class="btn btn-info btn-md" type="submit" name="rec" value="{{ book_rec }}">Read</button>
+                  </form>
+                  <form action="{{ url_for('views.find_book') }}" method="POST"></form>
+                    <button class="btn btn-info btn-md" type="submit" name="rec" value="{{ book_rec }}">Wishlist</button>
+                  </form>
+                </div>
+              {% else %}
+                <button class="btn btn-info find-button" href="https://openlibrary.org/">Find ID on Open Library</button>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+
+{% endblock %}

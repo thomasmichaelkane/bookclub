@@ -1,0 +1,43 @@
+{% extends "base.html" %}{% block title %}Home{% endblock %}
+
+{% block content %}
+  </br>
+    <h2 style="text-align: centre">book club</h2>
+  </br>
+  {% set shuffled_users = users|shuffle %}
+  {% set shuffled_books = books|shuffle %}
+
+  {% for i in range(0,10)%}
+    {% if i < shuffled_users|length %}
+      {% set user = shuffled_users[i] %}
+      {% set rand_band = [0,1,2]|random %}
+      {% if rand_band == 0 and user.books_read|length > 1 %}
+        <div class="band user-review-band mx-1 my-1">
+          <h3>{{ user.username }}</h3>
+          {{ render_partial('shared/partials/bands/user_reviews.html', user=user) }}
+        </div>
+      {% elif rand_band == 1 %}
+        <div class="band user-band mx-1 my-1">
+          <h3>{{ user.username }}</h3>
+          {{ render_partial('shared/partials/bands/user_books.html', user=user) }}
+        </div>
+      {% else %}
+        <div class="band user-band mx-1 my-1">
+          <h3>{{ user.username }}</h3>
+          {{ render_partial('shared/partials/bands/user_stats.html', user=user) }}
+        </div>
+      {% endif %}
+    {% endif %}
+    {% if i < shuffled_books|length %}
+      {% set book = shuffled_books[i] %}
+      {% if book.reviews|length > 0 %}
+        <div class="band book-band mx-1 my-1">
+          <h3>{{ book.title }}</h3>
+          <h4>{{ book.author }}</h4>
+          {{ render_partial('shared/partials/bands/book_reviews.html', book=book) }}
+        </div>
+      {% endif %}        
+    {% endif %}
+  {% endfor %}
+{% endblock %}
+

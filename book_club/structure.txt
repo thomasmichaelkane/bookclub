@@ -1,0 +1,18 @@
+Backend book functions
+
+Add to wishlist (+)    
+Reading (+)
+Finish Book (+)
+Remove from wishlist
+Stop reading completely
+Stop reading return to wishlist
+
+/// READ AGAIN FUNCTIONALITY? ///
+
+
+
+Check if book is in database with OLID
+
+ if not: add book
+
+Change book status

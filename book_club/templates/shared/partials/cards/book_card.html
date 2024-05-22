@@ -1,0 +1,14 @@
+<!-- BOOK-->
+<div class="card border-dark mb-3">
+  <div class="card-block text-dark" style="transform: rotate(0);">
+    <div class="container m-2">
+      <div class="row gx-2">
+        <div class="col">
+          <h5 class="card-title">{{ book.title }}</h5>
+          <h6 class="card-subtitle">{{ book.author }}</h6>
+          <a class="stretched-link" href="{{ url_for('views.book', book_id=book.id) }}"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
