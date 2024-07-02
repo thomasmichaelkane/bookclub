@@ -1,0 +1,14 @@
+{% if relationship.status == BookStatusEnum.WISHLIST %}
+    <div class="band-header-block d-inline-block">
+        {{ render_partial('shared/partials/symbols/bookmark_wish.html') }}
+    </div>
+    {% elif relationship.status == BookStatusEnum.READING %}
+    <div class="band-header-block d-inline-block">
+        {{ render_partial('shared/partials/symbols/book_open.html') }}
+    </div>
+    {% elif relationship.status == BookStatusEnum.FINISHED %}
+    <div class="band-header-block d-inline-block">
+        {{ render_partial('shared/partials/symbols/bookmark_check.html') }}
+    </div>
+    {% else %}
+{% endif %}

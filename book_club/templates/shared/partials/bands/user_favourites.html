@@ -1,0 +1,16 @@
+{% set favourites_shuffled = user.book_relationships|selectattr("favourite", "eq", True) | list | shuffle %}
+{% set relationship = favourites_shuffled[0] %}
+<div class="band-content">
+  <div class="review book-link-shade">
+    <div class="book-cover-col">
+      {{ render_partial('shared/partials/content_elements/book_cover.html', book=relationship.book) }}
+    </div>
+    <div class="content-col">
+      <div class="row no-gutters flex-nowrap">
+        <div class="col">
+          {{ render_partial('shared/partials/content_elements/review_book.html', relationship=relationship) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

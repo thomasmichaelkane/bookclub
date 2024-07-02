@@ -1,0 +1,14 @@
+<div class="book-mini-review m-3">
+  <div class="book-cover">
+    <img src="{{ article.thumbnail }}" alt="cover">
+  </div>
+  <div class="book-mini-review-book px-2">
+    <div class="book-mini-review-info">
+        <div class="book-mini-title text-truncate">{{ article.title }}</div>
+        <div class="book-mini-author">{{ article.user.username }}</div>
+    </div>
+    <div class="multi-line-text-truncate">
+      {{ article.content }}
+    </div>
+  </div>
+</div>

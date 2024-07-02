@@ -1,122 +1,183 @@
 from os import path
 import lorem
+import random
+import json
+import statistics
 
 from book_club import app, db, bcrypt, DB_NAME
-from book_club.models import User, Book, Review
-from book_club.library import search_book
+from book_club.models import User, Book, BookUserRel, Article
+from book_club.utils import BookStatusEnum, ArticleTypeEnum
 
-def create_database():
+def run():
     if not path.exists('flask_web/' + DB_NAME):
         with app.app_context():
             db.create_all()
-            
-        add_dummy_data()
         
+        load_dummy_data()
+
+def dummy_articles(users):
+    
+    images = ["static/images/article_images/randim_"+str(i)+".jpg" for i in range(1,11)]
+    type = random.choice(list(ArticleTypeEnum))
+    
+    articles = [Article(title=lorem.sentence(),
+                        type=type,
+                        content=lorem.text(),
+                        images = json.dumps([images[i]]),
+                        thumbnail = images[i],
+                        user=users[i]) for i in range(0,5)]
+    
+    return articles
+
 def dummy_users():
     
-    admin_hashed_password = bcrypt.generate_password_hash("yatch").decode('utf-8')
-    dummy_hashed_password = bcrypt.generate_password_hash("ciao").decode('utf-8')
+    user_hashed_password = bcrypt.generate_password_hash("ciao").decode('utf-8')
+    usernames = import_username_json()
     
-    users=[User(email="admin@example.com", 
+    users = [User(email=username["username"]+"@example.com", 
+                    username=username["username"], 
+                    password=user_hashed_password) for username in usernames]
+    
+    return users
+
+def admin_user():
+    
+    admin_hashed_password = bcrypt.generate_password_hash("yatch").decode('utf-8')
+    admin = User(email="admin@example.com", 
                     username="admin", 
-                    password=admin_hashed_password),
-           User(email="dummy1@example.com", 
-                        username="dummy1", 
-                        password=dummy_hashed_password),
-           User(email="dummy2@example.com", 
-                        username="dummy2", 
-                        password=dummy_hashed_password),
-           User(email="dummy3@example.com", 
-                        username="dummy3", 
-                        password=dummy_hashed_password),
-           User(email="dummy4@example.com", 
-                        username="dummy4", 
-                        password=dummy_hashed_password)]
-            
+                    password=admin_hashed_password)
+    
+    return admin
+    
+def add_users():
+    
+    users = dummy_users()
+    users.append(admin_user())
+
     return users
         
-def dummy_books():
+def import_book_json(json_name):
     
-    books_api_info = []
+    with open('json/'+json_name, 'r') as f:
+        data = json.loads(f.read())
+        
+        return data
     
-    books_api_info.append(search_book("Oliver Twist", "Charles Dickens"))
-    books_api_info.append(search_book("My Life", "Anton Chekhov"))
-    books_api_info.append(search_book("MacBeth", "William Shakespeare"))
-    books_api_info.append(search_book("Beautiful Star", "Yukio Mishima"))
-    books_api_info.append(search_book("The Lord of the Rings", "J.R.R. Tolkien"))
-    books_api_info.append(search_book("1984", "George Orwell"))
-    books_api_info.append(search_book("To Kill a Mockingbird", "Harper Lee"))
-    books_api_info.append(search_book("Pride and Prejudice", "Jane Austen"))
-    books_api_info.append(search_book("The Great Gatsby", "F. Scott Fitzgerald"))
-    books_api_info.append(search_book("The Catcher in the Rye", "J.D. Salinger"))
-    books_api_info.append(search_book("Moby-Dick", "Herman Melville"))
-    books_api_info.append(search_book("The Hobbit", "J.R.R. Tolkien"))
-    books_api_info.append(search_book("Brave New World", "Aldous Huxley"))
-    books_api_info.append(search_book("The Hitchhiker's Guide to the Galaxy", "Douglas Adams"))
-    books_api_info.append(search_book("Harry Potter and the Sorcerer's Stone", "J.K. Rowling"))
-    books_api_info.append(search_book("The Da Vinci Code", "Dan Brown"))
-    books_api_info.append(search_book("Frankenstein", "Mary Shelley"))
-    books_api_info.append(search_book("The Hunger Games", "Suzanne Collins"))
-    books_api_info.append(search_book("The Adventures of Sherlock Holmes", "Arthur Conan Doyle"))
-    books_api_info.append(search_book("The Chronicles of Narnia: The Lion, the Witch and the Wardrobe", "C.S. Lewis"))
-    books_api_info.append(search_book("The Alchemist", "Paulo Coelho"))
-    books_api_info.append(search_book("Gone with the Wind", "Margaret Mitchell"))
-    books_api_info.append(search_book("The Picture of Dorian Gray", "Oscar Wilde"))
-    books_api_info.append(search_book("Lord of the Flies", "William Golding"))
-    books_api_info.append(search_book("Wuthering Heights", "Emily Brontë"))
+def import_username_json():
+    
+    with open('json/names.json', 'r') as f:
+        data = json.loads(f.read())
+        
+        return data
 
+def add_relationship_random(user, book):
+    
+    status = random.choices(
+        list(BookStatusEnum), cum_weights=(5, 25, 100))[0]
+    relationship = BookUserRel(user=user, book=book, status=status)
+    
+    if status.name == "FINISHED":
+        relationship.review=lorem.paragraph()
+        relationship.rating=random.choice([0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
+        
+        favourite = random.randrange(0,1)
+        
+        if favourite < 0.15:
+            relationship.favourite = True
+        
+    db.session.add(relationship)
+    
+def clean_description(old_description):
+    
+    if old_description is not None:
+        breaker_line = old_description.find("--------")
+        
+        new_description = old_description[0:breaker_line]
+        
+        return new_description
+    
+    else:
+        
+        return old_description
+
+def load_book_data():
+    
+    books_api_info = import_book_json("book-data-2.json")
+    print(books_api_info)
+    
     books = [Book(title=book_info["title"], 
-                  author=book_info["author"], 
-                  olid=book_info["olid"],
-                  cover_url_s=book_info["cover_url_s"], 
-                  cover_url_m=book_info["cover_url_m"],
-                  cover_url_l=book_info["cover_url_l"]) for book_info in books_api_info]
+                author=book_info["author"], 
+                olid=book_info["olid"],
+                description=clean_description(book_info["description"]),
+                cover_url_s=book_info["cover_url_s"], 
+                cover_url_m=book_info["cover_url_m"],
+                cover_url_l=book_info["cover_url_l"]) for book_info in books_api_info]
     
     return books
 
-def add_review(user, book):
+def load_dummy_data():
     
-    review = Review(content=lorem.paragraph(), author=user, book=book)
-    db.session.add(review)
-
-def add_dummy_data():
+    n_books_per_user = 25
     
     with app.app_context():
     
-        users = dummy_users()
+        users = add_users()
         
         [db.session.add(user) for user in users]
         
-        books = dummy_books()
+        books = load_book_data()
         
         [db.session.add(book) for book in books]
         
-        for i in range(1,15):
-            users[0].books_read.append(books[i])
-            if i < 10:
-                add_review(users[0], books[i])
-        users[0].books_reading.append(books[0])
-        
-        for i in range(4,9):
-            users[1].books_read.append(books[i])
-            add_review(users[1], books[i])
-        users[1].books_reading.append(books[3])
-        
-        for i in range(15,20):
-            users[2].books_read.append(books[i])
-            add_review(users[2], books[i])
-        users[2].books_reading.append(books[12])
-        
-        for i in range(5,9):
-            users[3].books_read.append(books[i])
-            add_review(users[3], books[i])
-        users[3].books_reading.append(books[0])
-        users[3].books_reading.append(books[18])
-        
-        for i in range(13,17):
-            users[4].books_read.append(books[i])
-            add_review(users[4], books[i])
-        
+        for user in users:
+            for i in random.sample(range(0, 81), n_books_per_user):
+                add_relationship_random(user, books[i])
+
         db.session.commit()
         
-create_database()
+        average_ratings()
+        articles = dummy_articles(users)
+        [db.session.add(article) for article in articles]
+        
+        db.session.commit()
+
+def average_ratings():
+    
+    books = Book.query.all()
+
+    for book in books:
+        
+        relationships = [relationship for relationship in book.user_relationships if relationship.status == BookStatusEnum.FINISHED]
+
+        ratings =  [relationship.rating for relationship in relationships]
+        
+        if len(ratings) != 0:
+        
+            avg_rating = statistics.mean(ratings)
+
+            book.average_rating = avg_rating
+
+    
+if __name__ == "__main__":    
+    run()
+
+
+# def add_status(user, book, status):
+    
+#     relationship = BookUserRel(user=user, book=book, status=status)
+#     db.session.add(relationship)
+
+# def dummy_book_1():
+    
+#     books_api_info = []
+    
+#     books_api_info.append(search_book("Oliver Twist", "Charles Dickens"))
+
+#     books = [Book(title=book_info["title"], 
+#                   author=book_info["author"], 
+#                   olid=book_info["olid"],
+#                   cover_url_s=book_info["cover_url_s"], 
+#                   cover_url_m=book_info["cover_url_m"],
+#                   cover_url_l=book_info["cover_url_l"]) for book_info in books_api_info]
+    
+#     return books

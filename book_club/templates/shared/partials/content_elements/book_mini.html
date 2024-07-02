@@ -1,0 +1,10 @@
+<div class="content-element book-link-shade">
+  <div class="book-mini">
+    <img src="{{ book.cover_url_l }}" alt="cover">
+    <div>
+      <div class="book-mini-title">{{ book.title }}</div>
+      <div class="book-mini-author">{{ book.author }}</div>
+    </div>
+    <a class="stretched-link" href="{{ url_for('views.book', book_id=book.id) }}"></a>
+  </div>
+</div>

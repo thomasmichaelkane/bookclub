@@ -1,7 +1,6 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template
 from flask_login import login_required, current_user
-from book_club import db
-from book_club.models import Book, Review, User
+from book_club.models import Book, User, BookUserRel, Article
 from book_club.forms import BookForm, ReviewForm
 from book_club.library import search_book
 
@@ -14,21 +13,21 @@ def home():
     
     users = User.query.all()
     books = Book.query.all()
-    main_book_ids = {user.id: 0 for user in users}
-    
-    if request.method == 'POST':
-
-        ids = request.form.get('switch_main_book')
-        main_book_ids[ids[1]] = ids[4]
-        print(main_book_ids)
             
     return render_template('home.html', users=users, books=books)
 
-## RECCOMEND PAGE ##
-@views.route('/reccomend', methods=['GET', 'POST'])
+## BOOK PAGE ##
+@views.route('/book/<int:book_id>', methods=['GET', 'POST'])
 @login_required
-def reccomend():
-    return render_template('reccomend.html', response=[])
+def book(book_id):
+    
+    book = Book.query.get_or_404(book_id)
+
+    current_user_relationship = BookUserRel.query.filter(BookUserRel.book==book, BookUserRel.user==current_user).first()
+      
+    form = ReviewForm()
+    
+    return render_template('book.html', book=book, form=form, relationship=current_user_relationship)
 
 ## USER PAGE ##
 @views.route('/user/<int:user_id>', methods=['GET', 'POST'])
@@ -36,8 +35,6 @@ def reccomend():
 def user(user_id):
     
     user = User.query.get_or_404(user_id)
-    
-    print(user)
     
     return render_template('user.html', user=user)
 
@@ -67,34 +64,46 @@ def search():
             return render_template('search.html', form=form, book_api=book_api, exists=exists)
     return render_template('search.html', form=form)
 
-## BOOK PAGE ##
-@views.route('/book/<int:book_id>', methods=['GET', 'POST'])
+## RECCOMEND PAGE ##
+@views.route('/reccomend', methods=['GET', 'POST'])
 @login_required
-def book(book_id):
+def reccomend():
+    return render_template('reccomend.html', response=[])
+
+## ARTICLES PAGE ##
+@views.route('/articles', methods=['GET', 'POST'])
+@login_required
+def articles():
     
-    book = Book.query.get_or_404(book_id)
-    
-    if book in current_user.books_read:
+    articles = Article.query.all()
+
+    return render_template('articles.html', articles=articles)
+
+
+
+
+
+
+
+    # if book in current_user.books_read:
         
-        form = ReviewForm()
+    # form = ReviewForm()
     
-        if form.validate_on_submit():
+    #     if form.validate_on_submit():
             
-            print("hi")
+    #         print("hi")
 
-            review = Review(author=current_user, 
-                            book=book, 
-                            content=form.content.data)
+    #         # review = Review(author=current_user, 
+    #         #                 book=book, 
+    #         #                 content=form.content.data)
 
-            db.session.add(review)
-            db.session.commit()
+    #         # db.session.add(review)
+    #         # db.session.commit()
 
-            return render_template('book.html', book=book, form=form)
+    #         return render_template('book.html', book=book, form=form)
         
-    else:
-        form = None
-    
-    return render_template('book.html', book=book, form=form)
+    # else:
+    #     form = None
 
 ## BOOK METHODS ##
 

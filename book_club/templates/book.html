@@ -4,32 +4,48 @@
 
 <div class="container mt-5">
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-2" style="min-width: 250px;">
       <!-- Placeholder for book cover image -->
       <img src="{{ book.cover_url_l }}", alt="cover" height="300">
     </div>
-    <div class="col-md-8">
+    <div class="col-md-7">
       <div class="book-details">
         <!-- Placeholder for book title -->
         <h2 class="book-title-placeholder mb-3">{{ book.title }}</h2>
         <!-- Placeholder for book author -->
         <h4 class="book-author-placeholder mb-3">{{ book.author }}</h4>
-        <!-- Placeholder for book description -->
-        <p class="book-description-placeholder">description</p>
+        {% if book.description is not none %}
+          <p class="description">
+            {{ book.description }}
+          </p>
+        {% endif %}
       </div>
     </div>
     <div class="col-md-2">
       <div class="rating">
-        <h1>3.7</h1>
+        {% if book.average_rating != None %}
+          {% set average_rating = book.average_rating | round(1) %}
+          <h1>{{ average_rating }}</h1>
+        {% else %}
+          <h1>-</h1>
+        {% endif %}
       </div>
       <div class="status">
-        {% if current_user in book.users_read %}
+        {{ render_partial('shared/partials/symbols/symbol_logic.html', relationship=relationship) }}
+        {% if relationship.status == BookStatusEnum.FINISHED %}
           <h3>Read</h3>
-        {% elif current_user in book.users_reading %}
+          {% if relationship.favourite == False %}
+            {{ render_partial('shared/partials/buttons/favourite_book.html', book=book) }}
+          {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+            </svg>
+          {% endif %}
+        {% elif relationship.status == BookStatusEnum.READING %}
           <h3>Reading</h3>
           {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}
           {{ render_partial('shared/partials/buttons/shelve_book.html', book=book) }}
-        {% elif current_user in book.users_wish %}
+        {% elif relationship.status == BookStatusEnum.WISHLIST %}
           <h3>In wishlist</h3>
           {{ render_partial('shared/partials/buttons/start_book.html', book=book) }}
           {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}
@@ -47,14 +63,16 @@
     <div class="col">
       <div class="reviews-section m-3">
         <!-- Placeholder for reviews -->
-        {% for review in book.reviews|reverse %}
-          <div class="row">
-            <div class="review-placeholder p-3">
-              <!-- Individual review placeholder -->
-              <div class="review-title-placeholder">{{ review.author.username }}</div>
-              <div class="review-content-placeholder">{{ review.content }}</div>
+        {% for relationship in book.user_relationships %}
+          {% if relationship.review != None %} 
+            <div class="row">
+              <div class="review-placeholder p-3">
+                <!-- Individual review placeholder -->
+                <a href="{{ url_for('views.user', user_id=relationship.user.id) }}" class="review-title-placeholder">{{ relationship.user.username }}</a>
+                <div class="review-content-placeholder">{{ relationship.review }}</div>
+              </div>
             </div>
-          </div> 
+          {% endif %}
         {% endfor %}
       </div>
     </div>

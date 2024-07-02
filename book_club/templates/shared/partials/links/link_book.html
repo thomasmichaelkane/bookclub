@@ -1,0 +1,21 @@
+<div class="band-content">
+  <div class="band-header">
+    <a href="{{ url_for('views.book', book_id=book.id) }}" class="stretched-link"></a>
+    <div class="band-header-block d-inline-block">
+      <h2 class="text-literary">{{ book.title }}</h2>
+    </div>
+    <div class="band-header-block d-inline-block">
+      <h4 class="text-literary">by {{ book.author }}</h4>
+    </div>
+  </div>
+  <div class="header-end">
+    {% set relationships = current_user.book_relationships|selectattr("book", "eq", book) | list %}
+    {% if relationships | length != 0 %}
+      {% set relationship = relationships[0] %}
+      {{ render_partial('shared/partials/symbols/bookmark_check.html', relationship=relationship) }}
+    {% endif %}
+    <div class="band-header-block d-inline-block">
+      <h4>{{ book.average_rating | round(1)}}</h4>
+    </div>
+  </div>
+</div>

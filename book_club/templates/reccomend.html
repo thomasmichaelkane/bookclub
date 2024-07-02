@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container page-content">
   <div>
-      <form action="{{ url_for('views.rec_prompt') }}" method="POST">
+      <form action="{{ url_for('actions.gpt_reccomend') }}" method="POST">
           <button class="btn btn-primary btn-md" name="rec-by-reading">Reccomend</button>
       </form>
   </div>
@@ -36,10 +36,10 @@
             <div class="card-footer">
               {% if book_rec["openlib_found"] %}
                 <div class="btn-group" role="group" aria-label="Basic example">
-                  <form action="{{ url_for('views.find_book') }}" method="POST"></form>
+                  <form action="{{ url_for('actions.find_book') }}" method="POST"></form>
                     <button class="btn btn-info btn-md" type="submit" name="rec" value="{{ book_rec }}">Read</button>
                   </form>
-                  <form action="{{ url_for('views.find_book') }}" method="POST"></form>
+                  <form action="{{ url_for('actions.find_book') }}" method="POST"></form>
                     <button class="btn btn-info btn-md" type="submit" name="rec" value="{{ book_rec }}">Wishlist</button>
                   </form>
                 </div>

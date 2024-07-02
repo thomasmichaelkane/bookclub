@@ -2,12 +2,14 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 import requests
 from book_club import db
-from book_club.models import Book
+from book_club.models import Book, BookUserRel
 from book_club.forms import ReviewForm
 from book_club.aiapi import response_test
 from book_club.library import search_book, search_by_olid
+from book_club.utils import BookStatusEnum
 
 actions = Blueprint('actions', __name__)
+
 
 ## WISHLIST BOOK ##
 @actions.route('/wishlist-book', methods=['POST'])
@@ -17,10 +19,19 @@ def wishlist_book():
     if request.method == 'POST':
         book_id = request.form.get('wish')
         book = Book.query.get_or_404(book_id)
-        current_user.books_wish.append(book)
+        
+        current_user_relationship = BookUserRel.query.filter(BookUserRel.book==book, 
+                                                        BookUserRel.user==current_user).first()
+
+        if current_user_relationship is None:
+            current_user_relationship = BookUserRel(user=current_user, book=book, status=BookStatusEnum.WISHLIST)
+            db.session.add(current_user_relationship)
+        else:
+            current_user_relationship.status = BookStatusEnum.WISHLIST
+
         db.session.commit()
     
-        return render_template('/book.html', book=book, form=None)
+        return render_template('/book.html', book=book, form=None, relationship=current_user_relationship)
     
 ## START BOOK ##
 @actions.route('/start-book', methods=['POST'])
@@ -32,16 +43,20 @@ def start_book():
         book_id = request.form.get('start')
         book = Book.query.get_or_404(book_id)
         
-        if current_user in book.users_wish:
-            current_user.books_wish.remove(book)
-        
-        if current_user not in book.users_reading:
-            current_user.books_reading.append(book)
+        current_user_relationship = BookUserRel.query.filter(BookUserRel.book==book, 
+                                                        BookUserRel.user==current_user).first()
+
+        if current_user_relationship is None:
+            current_user_relationship = BookUserRel(user=current_user, book=book, status=BookStatusEnum.READING)
+            db.session.add(current_user_relationship)
+        else:
+            current_user_relationship.status = BookStatusEnum.READING
+
+        db.session.commit()
        
         db.session.commit()
     
-        book = Book.query.get_or_404(book_id)
-        return render_template('book.html', book=book, form=None)
+        return render_template('book.html', book=book, form=None, relationship=current_user_relationship)
 
 ## FINISH BOOK ##
 @actions.route('/finish-book', methods=['POST'])
@@ -53,17 +68,21 @@ def finish_book():
         book_id = request.form.get('finish')
         book = Book.query.get_or_404(book_id)
         
-        if current_user in book.users_reading:
-            current_user.books_reading.remove(book)
-        if current_user in book.users_wish:
-            current_user.books_wish.remove(book)
-        if current_user not in book.users_read:
-            current_user.books_read.append(book)
+                
+        current_user_relationship = BookUserRel.query.filter(BookUserRel.book==book, 
+                                                        BookUserRel.user==current_user).first()
+
+        if current_user_relationship is None:
+            current_user_relationship = BookUserRel(user=current_user, book=book, status=BookStatusEnum.FINISHED)
+            db.session.add(current_user_relationship)
+        else:
+            current_user_relationship.status = BookStatusEnum.FINISHED
+
         db.session.commit()
         
         form = ReviewForm()
     
-        return render_template('book.html', book=book, form=form)
+        return render_template('book.html', book=book, form=form, relationship=current_user_relationship)
 
 ## SHELVE BOOK ##
 @actions.route('/shelve-book', methods=['POST'])
@@ -75,15 +94,37 @@ def shelve_book():
         book_id = request.form.get('shelve')
         book = Book.query.get_or_404(book_id)
         
-        if current_user in book.users_reading:
-            current_user.books_reading.remove(book)
-        if current_user in book.users_wish:
-            current_user.books_wish.remove(book)
+                
+        current_user_relationship = BookUserRel.query.filter(BookUserRel.book==book, 
+                                                        BookUserRel.user==current_user).first()
+
+        if current_user_relationship is not None:
+            db.session.delete(current_user_relationship)
             
         db.session.commit()
+
+        return render_template('book.html', book=book, form=None, relationship=current_user_relationship)
     
+## FAVOURITE BOOK ##
+@actions.route('/favourite-book', methods=['POST'])
+@login_required
+def favourite_book():
+    
+    if request.method == 'POST':
+        
+        book_id = request.form.get('favourite')
         book = Book.query.get_or_404(book_id)
-        return render_template('book.html', book=book, form=None)
+        
+                
+        current_user_relationship = BookUserRel.query.filter(BookUserRel.book==book, 
+                                                        BookUserRel.user==current_user).first()
+
+        if current_user_relationship is not None:
+            current_user_relationship.favourite = True
+            
+        db.session.commit()
+
+        return render_template('book.html', book=book, form=None, relationship=current_user_relationship)
 
 ## API BOOK ##
 @actions.route('/find-book', methods=['POST'])
@@ -129,7 +170,7 @@ def add_book():
 
         db.session.commit()
 
-        return render_template('book.html', book=book, form=None)
+        return render_template('book.html', book=book, form=None, current_user_relationship=None)
 
 ## GPT RECCOMEND ##
 @actions.route('/gpt-reccomend', methods=['POST'])

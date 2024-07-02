@@ -32,6 +32,7 @@ app.register_blueprint(actions, url_prefix='/')
 
 ## JINJA CONFIG ##
 from book_club.library import random_book_color
+from book_club.utils import BookStatusEnum
 
 @app.template_filter('shuffle')
 def filter_shuffle(seq):
@@ -41,11 +42,9 @@ def filter_shuffle(seq):
         return result
     except:
         return seq
-    
+
 app.jinja_env.globals.update(random_book_color=random_book_color)
-
-
-
+app.jinja_env.globals.update(BookStatusEnum=BookStatusEnum)
 
 
     

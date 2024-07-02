@@ -1,0 +1,9 @@
+<div class="content-element">
+  <div class="user-review">
+    {% set user = relationship.user %}
+    <div class="text-username book-mini-title">{{ user.username }}</div>
+    <div class="multi-line-text-truncate">
+      {{ relationship.review }}
+    </div>
+  </div>
+</div>

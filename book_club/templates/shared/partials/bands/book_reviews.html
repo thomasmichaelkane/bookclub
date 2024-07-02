@@ -1,31 +1,24 @@
-<div class="card-deck h-75 w-100">
-  {% set shuffled_reviews = book.reviews|shuffle %}
-  
-  {% for review in shuffled_reviews %}
-    {{ render_partial('shared/partials/cards/user_review.html', review=review) }}
-  {% endfor %}
-</div>
-
-
-<!-- 
-  {% if shuffled_reading|length > 1 %}
-    {% for i in range(0,5) %}
-      {% if i < shuffled_reading|length %}
-        {% set book = shuffled_reading[i] %}
-        <div class="col-lg-4 mb-3 d-flex align-items-stretch">
-          <div class="card w-50">
-            <div class="card-body">
-              <h5 class="card-title">{{ book.title }}</h5>
-              <h6 class="card-subtitle">{{ book.author }}</h6>
-              {% if book in current_user.books_reading %}
-                <span class="badge badge-warning">Reading</span>
-              {% elif book in current_user.books_read %}
-                <span class="badge badge-success">Complete</span>
-              {% endif %}
-            </div>
-          </div>
+{% set users_finished_shuffled = book.user_relationships|selectattr("review", "ne", none) | list | shuffle %}
+{% set n_reviews = users_finished_shuffled|length %}
+{% if n_reviews < 3 %}
+  {% set n = n_reviews %}
+{% else %}
+  {% set n = 3 %}
+{% endif %}
+<div class="band-content">
+  <div class="book-cover-col">
+    {{ render_partial('shared/partials/content_elements/book_cover.html', book=book) }}
+  </div>
+  <div class="content-col">
+    <div class="row no-gutters flex-nowrap">
+      {% set hide_classes = ["", "d-none d-md-block", "d-none d-lg-block"] %}
+      {% for i in range(0,n) %}
+        {% set relationship = users_finished_shuffled[i] %}
+        {% set hide_class = hide_classes[i] %}
+        <div class="{{ hide_class }} col">
+          {{ render_partial('shared/partials/content_elements/review_user.html', relationship=relationship) }}
         </div>
-      {% endif %}
-    {% endfor %}
-  {% endif %}
-</div> -->
+      {% endfor %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,191 @@
+:root {
+  --em-blue: #D7E2DC;
+  --em-gray: #F8EDEB;
+  --em-pink: #FAE1DD;
+  --em-green: #DED5CE;
+  --em-coral: #FEC5BA;
+  --em-yellow: #F5EBE1;
+  --user-band: #235d5e;
+  --user-review-band: #235e51;
+  --user-favourite-band: #23425e;
+  --user-stats-band: #235e4c;
+  --username-text: #ffffff;
+  --book-band: #dd7616;
+  --book-text: #ffffff;
+
+}
+
+.bands-section {
+  min-width: 100px;
+}
+
+.user-section {
+  background-color: #235e4c;
+  padding-bottom: 25px;
+}
+
+.library-section {
+  background-color: #dd7616;
+}
+
+.finished-block
+{
+  background-color: darkgreen;
+}
+
+.reading-block
+{
+  background-color: darkgoldenrod;
+}
+
+.logo-section {
+  padding-top: 25px;
+  padding-bottom: 10px;
+  color:rgb(5, 84, 78)
+}
+
+.band-header {
+  /* background-color: rgb(205, 109, 109); */
+  width: 100%;
+}
+
+.band-header-block {
+  /* background-color: rgb(109, 128, 63); */
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 5px;
+}
+
+.band-content {
+  display: flex;
+  /* background-color: rgb(40, 60, 160); */
+  padding: 5px;
+}
+
+.review {
+  display: flex;
+}
+
+.band-row
+{
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.main-col {
+  width: 100%;
+}
+
+.header-end {
+  width: 200px;
+  /* background-color: rgb(45, 177, 122); */
+  display: flex;
+  justify-content: right;
+}
+
+.content-element {
+  /* background-color: rgb(154, 102, 25); */
+  padding: 10px;
+  /* border: 5px, solid, #4b3c61; */
+}
+
+.band {
+  color: rgb(255, 255, 255);
+  transition: all .2s ease-in-out;
+  margin-bottom: 5px;
+}
+
+.text-username {
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.text-literary {
+  font-family: "Georgia", Times, serif;
+}
+
+.stretched-link:link { 
+  color: rgb(255, 255, 255);
+}
+
+.stretched-link​:hover { 
+  color: rgb(146, 180, 146);
+  text-decoration: none;
+}
+
+.band:hover { 
+  transform: scale(1.05);
+  z-index: 3000;
+}
+
+.band
+{
+  min-height: 150px;
+  position: relative;
+}
+
+
+.user-band
+{
+  background-color: var(--user-band)
+}
+
+.user-review-band
+{
+  background-color: var(--user-review-band)
+}
+
+.user-favourite-band
+{
+  background-color: var(--user-favourite-band)
+}
+
+.user-stats-band
+{
+  background-color: var(--user-stats-band)
+}
+
+.book-band
+{
+  background-color: var(--book-band);
+}
+
+
+.page-content
+{
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.grid-container
+{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+}
+
+
+
+.multi-line-text-truncate {
+  overflow: hidden;
+  max-width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  margin: 20px auto;
+}
+
+
+
+
+
+/* .book-read
+{
+  border-color: rgb(155, 178, 222);
+}
+
+.book-reading
+{
+  border-color: rgb(68, 126, 233);
+  border-width: 4px;
+} */

@@ -26,7 +26,12 @@
         <link 
             rel= "stylesheet" 
             type= "text/css" 
-            href= "{{ url_for('static', filename='main.css') }}"
+            href= "{{ url_for('static', filename='layout.css') }}"
+        />
+        <link 
+            rel= "stylesheet" 
+            type= "text/css" 
+            href= "{{ url_for('static', filename='elements.css') }}"
         />
     </head>
     <body>
@@ -44,6 +49,9 @@
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
                             <a class="nav-link" id="nav-home" href="{{ url_for('views.home') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="nav-home" href="{{ url_for('views.articles') }}">Articles</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="nav-add-book" href="{{ url_for('views.search') }}">Search</a>
@@ -108,7 +116,6 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"
         ></script>
-
         <script
             type="text/javascript"
             src{{ url_for('static', filename='index.js') }}
