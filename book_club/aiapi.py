@@ -1,6 +1,7 @@
 from flask_login import current_user
 from book_club.library import search_book
 from openai import OpenAI
+from book_club import app
 import re
 
 def create_by_reading_prompt():
@@ -19,7 +20,7 @@ def create_by_reading_prompt():
     
 def gpt_test():
    
-    client = OpenAI(api_key="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")
+    client = OpenAI(api_key=app)
    
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -32,7 +33,7 @@ def gpt_test():
     
 def rec_test():
         
-    client = OpenAI(api_key="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")
+    client = OpenAI(api_key=app.config['API_KEY'])
    
     example_prompt = 'Can you recommend me three books based on the list of books that I\'m currently reading. The books I\'m currently read are: "1984" by "george orwell", "on the road" by "jack kerouac". In your response can you wrap each section in an appropriate tag, for example <intro>, <title>, <author>, <description>, and <outro>.'
     
@@ -47,7 +48,7 @@ def rec_test():
     
 def openai_recomend(prompt):
    
-    client = OpenAI(api_key="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")
+    client = OpenAI(api_key=app.config['API_KEY'])
    
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",

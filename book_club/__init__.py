@@ -10,9 +10,13 @@ DB_NAME = "site.db"
 
 with open("secrets.txt") as f:
     SECRET_KEY = f.readline()
+    
+with open("apikey.txt") as f:
+    API_KEY = f.readline()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
+app.config['API_KEY'] = API_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
 
 db = SQLAlchemy(app)
