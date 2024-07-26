@@ -1,14 +1,37 @@
 {% if relationship.status == BookStatusEnum.WISHLIST %}
     <div class="band-header-block d-inline-block">
-        {{ render_partial('shared/partials/symbols/bookmark_wish.html') }}
+        <h3 class="status-badge">
+            {% if text == true %}
+                Wishlist
+            {% endif %}
+            <div class="ml-2">{{ render_partial('shared/partials/symbols/bookmark_wish.html') }}</div>
+        </h3>
     </div>
-    {% elif relationship.status == BookStatusEnum.READING %}
+{% elif relationship.status == BookStatusEnum.READING %}
     <div class="band-header-block d-inline-block">
-        {{ render_partial('shared/partials/symbols/book_open.html') }}
+        <h3 class="status-badge">
+            {% if text == true %}
+                Reading
+            {% endif %}
+            <div class="ml-2">{{ render_partial('shared/partials/symbols/book_open.html') }}</div>
+        </h3>
     </div>
-    {% elif relationship.status == BookStatusEnum.FINISHED %}
+{% elif relationship.status == BookStatusEnum.FINISHED %}
     <div class="band-header-block d-inline-block">
-        {{ render_partial('shared/partials/symbols/bookmark_check.html') }}
+        <h3 class="status-badge">
+            {% if text == true %}
+                Read
+            {% endif %}
+            <form action="{{ url_for('actions.favourite_book') }}" method="POST">
+                <button class="favourite-btn ml-2" type="submit" name="favourite" value="{{ relationship.book.id }}">
+                    {% if relationship.favourite == true %}
+                        {{ render_partial('shared/partials/symbols/bookmark_star.html') }}
+                    {% else %}
+                        {{ render_partial('shared/partials/symbols/bookmark_check.html') }}
+                    {% endif %}
+                </button>
+            </form>
+        </h3>
     </div>
-    {% else %}
+{% else %}
 {% endif %}

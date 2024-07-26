@@ -1,13 +1,6 @@
 import requests
 import random
 
-
-def random_book_color():
-    
-    palette = ["#D7E2DC", "#F8EDEB", "#FAE1DD", "#DED5CE", "#FEC5BA", "#F5EBE1"]
-        
-    return random.choice(palette)
-
 def book_in_lists(book_id, lists):
     
     book_id_int = int(book_id)
@@ -19,13 +12,11 @@ def book_in_lists(book_id, lists):
     # else
     return False
 
-def get_cover_urls(cover_id):
+def get_cover_url(cover_id):
     
-    img_s =  f"https://covers.openlibrary.org/b/id/{cover_id}-S.jpg"
-    img_m =  f"https://covers.openlibrary.org/b/id/{cover_id}-M.jpg"
-    img_l =  f"https://covers.openlibrary.org/b/id/{cover_id}-L.jpg"
+    url =  f"https://covers.openlibrary.org/b/id/{cover_id}-L.jpg"
     
-    return img_s, img_m, img_l
+    return url
 
 def get_olid_from_str(olid_str):
     
@@ -58,7 +49,7 @@ def search_author_by_key(author_key):
     
     return api_response
 
-def search_book(title, author):
+def search_book(title, author, n=1):
     
     title_search = "title=" + title.strip(" ").replace(" ", "+")
     
@@ -71,12 +62,28 @@ def search_book(title, author):
     api_response = response_with_catch(api_search)
     
     if len(api_response["docs"]) != 0:
-        book_info = get_book_info(api_response["docs"][0])
+        if n == 1:
+            book_info = get_book_info(api_response["docs"][0])
+        else:
+            book_info = [get_book_info(api_response["docs"][i]) for i in range(0,n)]
         
     else:
         book_info = None
     
     return book_info
+
+def clean_description(old_description):
+    
+    if old_description is not None:
+        breaker_line = old_description.find("--------")
+        
+        new_description = old_description[0:breaker_line]
+        
+        return new_description
+    
+    else:
+        
+        return old_description
 
 def get_book_info_olid(result):
     
@@ -94,6 +101,9 @@ def get_book_info_olid(result):
         print(len(description))
         if isinstance(description, dict):
             description = description["value"]
+            
+        description = clean_description(description)
+            
     except KeyError:
         description = None
     
@@ -102,21 +112,15 @@ def get_book_info_olid(result):
         if float(cover_id) < 100:
             cover_id = result["covers"][1]
         
-        cover_url_s, cover_url_m, cover_url_l = get_cover_urls(cover_id)
+        cover_url = get_cover_url(cover_id)
     except KeyError:
-        cover_url_s = "static/images/cover-blank.png"
-        cover_url_m = "static/images/cover-blank.png"
-        cover_url_l = "static/images/cover-blank.png"
+        cover_url = "/static/images/cover-blank.png"
         
     book_info = {"title": title, 
                 "author": author,
                 "olid": olid,
-                "description": description,
-                "cover_url_s": cover_url_s, 
-                "cover_url_m": cover_url_m, 
-                "cover_url_l": cover_url_l}
-    
-    # print(book_info)
+                "description": description ,
+                "cover_url": cover_url}
     
     return book_info
 
@@ -128,16 +132,13 @@ def get_book_info(result):
     
     try:
         cover_id = result["cover_i"]
+        cover_url = get_cover_url(cover_id)
     except KeyError:
-        cover_id = "14586152"
-        
-    cover_url_s, cover_url_m, cover_url_l = get_cover_urls(cover_id)
+        cover_url = "/static/images/cover-blank.png"
     
     book_info = {"title": title, 
                 "author": author,
                 "olid": olid,
-                "cover_url_s": cover_url_s, 
-                "cover_url_m": cover_url_m, 
-                "cover_url_l": cover_url_l}
+                "cover_url": cover_url}
     
     return book_info

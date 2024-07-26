@@ -1,6 +1,10 @@
 <div class="content-element book-link-shade">
   <div class="book-mini">
-    <img src="{{ book.cover_url_l }}" alt="cover">
+    <img 
+      src="{{ book.cover_url }}" 
+      alt="cover" 
+      onerror="this.onerror=null;this.src='/static/images/cover-blank.png';"
+    />
     <div>
       <div class="book-mini-title">{{ book.title }}</div>
       <div class="book-mini-author">{{ book.author }}</div>

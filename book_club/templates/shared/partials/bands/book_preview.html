@@ -1,0 +1,12 @@
+<div class="band-content">
+  <div class="book-cover-col">
+    {{ render_partial('shared/partials/content_elements/thumbnail.html', image=image) }}
+  </div>
+  <div class="content-col">
+    <div class="row no-gutters flex-nowrap">
+      <div class="col">
+        {{ render_partial('shared/partials/content_elements/content.html', content=description) }}
+      </div>
+    </div>
+  </div>
+</div>

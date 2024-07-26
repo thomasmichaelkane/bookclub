@@ -1,18 +1,18 @@
 :root {
-  --em-blue: #D7E2DC;
-  --em-gray: #F8EDEB;
-  --em-pink: #FAE1DD;
-  --em-green: #DED5CE;
-  --em-coral: #FEC5BA;
-  --em-yellow: #F5EBE1;
   --user-band: #235d5e;
   --user-review-band: #235e51;
   --user-favourite-band: #23425e;
   --user-stats-band: #235e4c;
   --username-text: #ffffff;
   --book-band: #dd7616;
+  --article-band: #5e2330;
   --book-text: #ffffff;
+}
 
+.form-search {
+  display: inline-block;
+  width: 45%;
+  padding-right: 10px;
 }
 
 .bands-section {
@@ -20,17 +20,21 @@
 }
 
 .user-section {
-  background-color: #235e4c;
   padding-bottom: 25px;
 }
 
-.library-section {
-  background-color: #dd7616;
-}
 
 .finished-block
 {
   background-color: darkgreen;
+}
+
+.nav-text {
+  color:rgb(5, 84, 78)
+}
+
+.nav-pills > li > a.active {
+  background-color:rgb(5, 84, 78) !important;
 }
 
 .reading-block
@@ -45,12 +49,10 @@
 }
 
 .band-header {
-  /* background-color: rgb(205, 109, 109); */
   width: 100%;
 }
 
 .band-header-block {
-  /* background-color: rgb(109, 128, 63); */
   padding-top: 10px;
   padding-left: 10px;
   padding-right: 5px;
@@ -58,7 +60,6 @@
 
 .band-content {
   display: flex;
-  /* background-color: rgb(40, 60, 160); */
   padding: 5px;
 }
 
@@ -78,15 +79,12 @@
 
 .header-end {
   width: 200px;
-  /* background-color: rgb(45, 177, 122); */
   display: flex;
   justify-content: right;
 }
 
 .content-element {
-  /* background-color: rgb(154, 102, 25); */
   padding: 10px;
-  /* border: 5px, solid, #4b3c61; */
 }
 
 .band {
@@ -149,6 +147,10 @@
   background-color: var(--book-band);
 }
 
+.article-band
+{
+  background-color: var(--article-band);
+}
 
 .page-content
 {
@@ -164,28 +166,12 @@
   grid-gap: 20px;
 }
 
-
-
 .multi-line-text-truncate {
   overflow: hidden;
   max-width: 100%;
   display: -webkit-box;
   -webkit-line-clamp: 7;
+  line-clamp: 7;
   -webkit-box-orient: vertical;
   margin: 20px auto;
 }
-
-
-
-
-
-/* .book-read
-{
-  border-color: rgb(155, 178, 222);
-}
-
-.book-reading
-{
-  border-color: rgb(68, 126, 233);
-  border-width: 4px;
-} */

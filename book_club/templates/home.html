@@ -1,72 +1,82 @@
 {% extends "base.html" %}{% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="page-section">
-  <div class="logo-section">
+  <div class="page-section">
+    <div class="logo-section">
       <h2 class="text-literary">book club</h2>
-  </div>
-  {% set shuffled_users = users|shuffle %}
-  {% set shuffled_books = books|shuffle %}
-  <div class="bands-section">
-    {% for i in range(0,50)%}
+    </div>
+    {% set shuffled_users = users|shuffle %}
+    {% set shuffled_books = books|shuffle %}
+    {% set shuffled_articles = articles|shuffle %}
 
-      {% if i < shuffled_books|length %}
-        {% set book = shuffled_books[i] %}
-        {% set users_finished = book.user_relationships|selectattr("status", "eq", BookStatusEnum.FINISHED) | list %}
-        {% if users_finished|length >= 1 %}
-          <div class="band book-band">
-            {{ render_partial('shared/partials/links/link_book.html', book=book) }}
-            {{ render_partial('shared/partials/bands/book_reviews.html', book=book) }}
+    {% set bands_dict = {"user": shuffled_users,
+                        "book": shuffled_books, 
+                        "article": shuffled_articles} %}
+
+    {% set iters_dict = get_iterables_dict(bands_dict) %}
+
+    <div class="bands-section">
+      {% for i in range(0,50) %}
+        {% set band_key, object = band_generator(iters_dict) | next_item %}
+
+        {% if band_key == "user" %}
+          {% set user = object %}
+          {% set rand_band = [0,1,2,3]|random %}
+          {% if rand_band == 0 %}
+            {% set books_finished = user.book_relationships|selectattr("status", "eq", BookStatusEnum.FINISHED) | list %}
+            {% if books_finished | length >= 1 %}
+              <div class="band user-band user-review-band">
+                {{ render_partial('shared/partials/headers/header_user.html', user=user, selection="some reviews") }}
+                {{ render_partial('shared/partials/bands/user_reviews.html', user=user) }}
+              </div>
+            {% endif %}
+          {% elif rand_band == 1 %}
+            {% set books_favourite = user.book_relationships|selectattr("favourite", "eq", True) | list %}
+            {% if books_favourite | length >= 1 %}
+              <div class="band user-band user-favourite-band">
+                {{ render_partial('shared/partials/headers/header_user.html', user=user, selection="a favourite") }}
+                {{ render_partial('shared/partials/bands/user_favourites.html', user=user) }}
+              </div>
+            {% endif %}
+          {% elif rand_band == 2 %}
+            {% set books_reading = user.book_relationships|selectattr("status", "eq", BookStatusEnum.READING) | list %}
+            {% if books_reading | length >= 1 %}
+              <div class="band user-band">
+                {{ render_partial('shared/partials/headers/header_user.html', user=user, selection="is currently reading") }}
+                {{ render_partial('shared/partials/bands/user_reading.html', user=user) }}
+              </div>
+            {% endif %}
+          {% else %}
+            {% set books_finished = user.book_relationships|selectattr("status", "eq", BookStatusEnum.FINISHED) | list %}
+            {% if books_finished | length >= 1 %}
+              <div class="band user-band">
+                {{ render_partial('shared/partials/headers/header_user.html', user=user, selection="has read") }}
+                {{ render_partial('shared/partials/bands/user_finished.html', user=user) }}
+              </div>
+            {% endif %} 
+          {% endif %}
+
+        {% elif band_key == "book" %}
+          {% set book = object %}
+          {% set users_finished = book.user_relationships|selectattr("status", "eq", BookStatusEnum.FINISHED) | list %}
+          {% if users_finished|length >= 1 %}
+            <div class="band book-band">
+              {{ render_partial('shared/partials/headers/header_book.html', book=book) }}
+              {{ render_partial('shared/partials/bands/book_reviews.html', book=book) }}
+            </div>
+          {% endif %}
+
+        {% elif band_key == "article" %}
+          {% set article = object %}
+          <div class="band article-band">
+            {{ render_partial('shared/partials/headers/header_article.html', article=article) }}
+            {{ render_partial('shared/partials/bands/article_preview.html', article=article) }}
           </div>
-        {% endif %}        
-      {% endif %}
 
-      {% if i < shuffled_users|length %}
-        {% set user = shuffled_users[i] %}
-        {% set rand_band = [0,1,2,3,4]|random %}
-        {% if rand_band == 0 %}
-          {% set books_finished = user.book_relationships|selectattr("status", "eq", BookStatusEnum.FINISHED) | list %}
-          {% if books_finished | length >= 1 %}
-            <div class="band user-band user-review-band">
-              {{ render_partial('shared/partials/links/link_user.html', user=user, selection="some reviews") }}
-              {{ render_partial('shared/partials/bands/user_reviews.html', user=user) }}
-            </div>
-          {% endif %}
-        {% elif rand_band == 1 %}
-          {% set books_favourite = user.book_relationships|selectattr("favourite", "eq", True) | list %}
-          {% if books_favourite | length >= 1 %}
-            <div class="band user-band user-favourite-band">
-              {{ render_partial('shared/partials/links/link_user.html', user=user, selection="a favourite") }}
-              {{ render_partial('shared/partials/bands/user_favourites.html', user=user) }}
-            </div>
-          {% endif %}
-        {% elif rand_band == 2 %}
-          {% set books_reading = user.book_relationships|selectattr("status", "eq", BookStatusEnum.READING) | list %}
-          {% if books_reading | length >= 1 %}
-            <div class="band user-band">
-              {{ render_partial('shared/partials/links/link_user.html', user=user, selection="is currently reading") }}
-              {{ render_partial('shared/partials/bands/user_reading.html', user=user) }}
-            </div>
-          {% endif %}
-        {% elif rand_band == 3 %}
-          {% set books_finished = user.book_relationships|selectattr("status", "eq", BookStatusEnum.FINISHED) | list %}
-          {% if books_finished | length >= 1 %}
-            <div class="band user-band">
-              {{ render_partial('shared/partials/links/link_user.html', user=user, selection="has read") }}
-              {{ render_partial('shared/partials/bands/user_finished.html', user=user) }}
-            </div>
-          {% endif %}
-        {% else %}   
         {% endif %}
-      {% endif %}
-    {% endfor %}
+      {% endfor %}
+    </div>
   </div>
-</div>
 {% endblock %}
 
 
-
-<!-- <div class="band user-band user-stats-band ">
-  {{ render_partial('shared/partials/links/link_user.html', user=user, selection="stats") }}
-  {{ render_partial('shared/partials/bands/user_stats.html', user=user) }}
-</div> -->

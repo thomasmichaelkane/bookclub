@@ -8,8 +8,11 @@ import random
 ## APP SETUP ##
 DB_NAME = "site.db"
 
+with open("secrets.txt") as f:
+    SECRET_KEY = f.readline()
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'pascal'
+app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
 
 db = SQLAlchemy(app)
@@ -31,8 +34,7 @@ app.register_blueprint(auth, url_prefix='/')
 app.register_blueprint(actions, url_prefix='/')
 
 ## JINJA CONFIG ##
-from book_club.library import random_book_color
-from book_club.utils import BookStatusEnum
+from book_club.utils import BookStatusEnum, get_iterables_dict, band_generator
 
 @app.template_filter('shuffle')
 def filter_shuffle(seq):
@@ -42,8 +44,13 @@ def filter_shuffle(seq):
         return result
     except:
         return seq
+    
+@app.template_filter('next_item')
+def next_item(seq):
+    return next(seq)
 
-app.jinja_env.globals.update(random_book_color=random_book_color)
+app.jinja_env.globals.update(get_iterables_dict=get_iterables_dict)
+app.jinja_env.globals.update(band_generator=band_generator)
 app.jinja_env.globals.update(BookStatusEnum=BookStatusEnum)
 
 

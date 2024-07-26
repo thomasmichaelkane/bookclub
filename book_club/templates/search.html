@@ -1,60 +1,37 @@
-{% extends "base.html" %}{% block title %}My Book{% endblock %}
+{% extends "base.html" %}{% block title %}Search{% endblock %}
 
 {% block content %}
-</br>
-<div class="content-section">
-    <h1>Add a book</h1>
-</div>
-</br>
-<div class="content-section">
-    <div class="row">
-        <div class="col">
-            {{ render_partial('shared/partials/forms/search_form.html', form=form) }}
-        </div>
-        {% if book_api|length > 0 %}
-            <div class="col">
-                <div>
-                    <div class="card-deck">
-                        {% set image = book_api["cover_url_m"] %}
-                        {% set olid = book_api["olid"] %}
-                        <!-- BOOK-->
-                        <div class="card border-dark mb-3">
-                        <div class="d-flex justify-content-center">
-                            <img src="{{ image }}" alt="">
-                        </div>
-                        <div class="card-body text-dark">
-                            <h5 class="card-title">{{ book_api["title"] }}</h5>
-                            <h6 class="card-subtitle">{{ book_api["author"] }}</h6>
-                        </div>
-                        <div class="card-footer">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                {% if exists %}
-                                    <a class="btn btn-success btn-md" href="{{ url_for('views.book', book_id=book.id) }}">
-                                        Go to book
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
-                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                                            <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
-                                        </svg>
-                                    </a>
-                                {% else %}
-                                    <form action="{{ url_for('actions.add_book') }}" method="POST">
-                                        <button class="btn btn-info btn-md" type="submit" name="add" value="{{ olid }}">Add</button>
-                                    </form>
-                                {% endif %}
-
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% else %}
-            <div class="col placeholder bg-secondary">
-                <!-- <span class="placeholder bg-primary"></span> -->
-            </div>
-        {% endif %}        
+  <div class="page-section">
+    <div class="logo-section">
+      <h2>search for a book</h2>
     </div>
-</div>
+    <div class="content-section">
+      <div class="form-section">
+        {{ render_partial('shared/partials/forms/search_form.html', form=form) }}
+      </div>
+      <div class="books-section">
+        {% set num_search_results = book_api|length %}
+        {% if num_search_results > 0 %}
+          {% set olid = book_api["olid"] %}
+          {% if exists %}
+            <div class="band book-band">
+              {{ render_partial('shared/partials/headers/header_search.html', title=book.title, author=book.author, exists=exists, olid=olid, id=book.id) }}
+              {{ render_partial('shared/partials/bands/book_info.html', image=book.cover_url, description=book.description) }}
+            </div>
+          {% else %}
+            <div class="band book-band">
+              {{ render_partial('shared/partials/headers/header_search.html', title=book_api["title"], author=book_api["author"], olid=olid, exists=exists) }}
+              {{ render_partial('shared/partials/bands/book_info.html', image=book_api["cover_url"], description=book_api["description"]) }}
+            </div>
+          {% endif %} 
+        {% else %}
+          <div class="col placeholder bg-secondary"></div>
+        {% endif %}     
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
-<!-- <button class="btn btn-info find-button" href="https://openlibrary.org/">Find ID on Open Library</button> -->
+
+
+

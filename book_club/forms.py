@@ -4,6 +4,7 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 
 from book_club.models import User
 
+## REGISTRATION FORM ##
 class RegistrationForm(FlaskForm):
     username = StringField('Username',
                             validators=[DataRequired(), Length(min=3, max=30)])
@@ -28,7 +29,8 @@ class RegistrationForm(FlaskForm):
         
         if user is not None:
             raise ValidationError('email taken')
-    
+
+## LOGIN FORM ##
 class LoginForm(FlaskForm):
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
@@ -36,20 +38,20 @@ class LoginForm(FlaskForm):
                              validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
-    
+
+## BOOK FORM ##
 class BookForm(FlaskForm):
     title = StringField('Title',
                         validators=[DataRequired()])
     author = StringField('Author')
-    # start_reading = BooleanField('I want to start reading this book')
     submit = SubmitField('Search')
-    
+
+## REVIEW FORM ##
 class ReviewForm(FlaskForm):
     rating = StringField('Rating',
                         validators=[DataRequired()])
     content = StringField('Content',
                           validators=[DataRequired()])
-    # start_reading = BooleanField('I want to start reading this book')
     submit = SubmitField('Post')
     
    

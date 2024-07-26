@@ -1,0 +1,13 @@
+<div class="band-content">
+  <div class="band-header">
+    <a href="{{ url_for('views.user', user_id=user.id) }}" class="stretched-link"></a>
+    <div class="band-header-block d-inline-block">
+      <h2 class="text-username">{{ user.username }}</h2>
+    </div>
+    <div class="band-header-block d-inline-block">
+      <h5>{{ selection }}</h5>
+    </div>
+  </div>
+  <div class="header-end">
+  </div>
+</div>

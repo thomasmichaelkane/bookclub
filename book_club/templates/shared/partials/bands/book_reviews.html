@@ -7,7 +7,7 @@
 {% endif %}
 <div class="band-content">
   <div class="book-cover-col">
-    {{ render_partial('shared/partials/content_elements/book_cover.html', book=book) }}
+    {{ render_partial('shared/partials/content_elements/thumbnail.html', image=book.cover_url) }}
   </div>
   <div class="content-col">
     <div class="row no-gutters flex-nowrap">

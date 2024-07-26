@@ -1,36 +1,41 @@
 <form method="POST">
     {{ form.hidden_tag() }}
-    <fieldset class="form-group">
-        <legend class="border-bottom mb-4">Search</legend>
-        <div class="form-group">
-            {{ form.title.label(class="form-control-label") }}
-
-            {% if form.title.errors %}
-            {{ form.title(class="form-control form-control-lg is-invalid") }}
-            <div class="invalid-feedback">
-                {% for error in form.title.errors %}
-                    <span>{{ error }}</span>
-                {% endfor %}
-            </div>
-        {% else %} 
-            {{ form.title(class="form-control form-control-lg") }}
-        {% endif %}
+    <div class="row">
+        <div class="col-11">
+            <fieldset class="form-group">
+                <div class="form-search form-group">
+                    {{ form.title.label(class="form-control-label") }}
+        
+                    {% if form.title.errors %}
+                    {{ form.title(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.title.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %} 
+                    {{ form.title(class="form-control form-control-lg") }}
+                {% endif %}
+                </div>
+                <div class="form-search form-group">
+                    {{ form.author.label(class="form-control-label")}}
+                    {% if form.author.errors %}
+                    {{ form.author(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.author.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %} 
+                    {{ form.author(class="form-control form-control-lg") }}
+                {% endif %}
+                </div>
+            </fieldset>
         </div>
-        <div class="form-group">
-            {{ form.author.label(class="form-control-label")}}
-            {% if form.author.errors %}
-            {{ form.author(class="form-control form-control-lg is-invalid") }}
-            <div class="invalid-feedback">
-                {% for error in form.author.errors %}
-                    <span>{{ error }}</span>
-                {% endfor %}
+        <div class="col-1">
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
             </div>
-        {% else %} 
-            {{ form.author(class="form-control form-control-lg") }}
-        {% endif %}
         </div>
-    </fieldset>
-    <div class="form-group">
-        {{ form.submit(class="btn btn-outline-info")}}
     </div>
 </form>

@@ -43,7 +43,7 @@ def rec_test():
         ]
     )
     
-    # print(response.choices[0].message.content)
+    print(response.choices[0].message.content)
     
 def openai_recomend(prompt):
    
@@ -95,12 +95,14 @@ def extract_response_data(response):
 
     for i in range(len(titles)):
 
-        openlib_api_info = search_book(titles[i], authors[i])
+        rec = search_book(titles[i], authors[i])
         
-        found = True if openlib_api_info is not None else False
+        found = True if recs is not None else False
         
-        rec = {"title": titles[i], "author": authors[i], "description": descriptions[i], "openlib_found": found, "openlib_api_info": openlib_api_info} 
-        recs.append(rec)
+        if found:
+        
+            rec["gpt_text"] = descriptions[i]
+            recs.append(rec)
         
     return intro, outro, recs
 

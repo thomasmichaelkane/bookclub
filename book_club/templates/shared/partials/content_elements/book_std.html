@@ -1,6 +1,10 @@
 <div class="col-12 col-sm-6 col-md-4 col-lg-3">
     <div class="book">
-        <img src="{{ book.cover_url_l }}" alt="cover">
+        <img 
+            src="{{ book.cover_url }}" 
+            alt="cover" 
+            onerror="this.onerror=null;this.src='/static/images/cover-blank.png';"
+        />
         <div class="book-title">{{ book.title }}</div>
         <div class="book-author">{{ book.author }}</div>
         <a class="stretched-link" href="{{ url_for('views.book', book_id=book.id) }}"></a>

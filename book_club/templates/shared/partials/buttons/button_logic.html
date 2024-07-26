@@ -1,0 +1,15 @@
+<div class="btn-group">
+    {% if relationship.status == BookStatusEnum.FINISHED %}
+    {% elif relationship.status == BookStatusEnum.READING %}
+        {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}
+        {{ render_partial('shared/partials/buttons/shelve_book.html', book=book) }}
+    {% elif relationship.status == BookStatusEnum.WISHLIST %}
+        {{ render_partial('shared/partials/buttons/start_book.html', book=book) }}
+        {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}
+        {{ render_partial('shared/partials/buttons/shelve_book.html', book=book) }}
+    {% else %}
+        {{ render_partial('shared/partials/buttons/wishlist_book.html', book=book) }}
+        {{ render_partial('shared/partials/buttons/start_book.html', book=book) }}
+        {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}
+    {% endif %}
+</div>

@@ -1,16 +1,16 @@
 {% set books_finished = user.book_relationships|selectattr("status", "eq", BookStatusEnum.FINISHED) | list %}
 {% set n_books_finished = books_finished|length %}
 {% if n_books_finished < 4 %}
-  {% set i = n_books_finished %}
+  {% set n = n_books_finished %}
 {% else %}
-  {% set i = 4 %}
+  {% set n = 4 %}
 {% endif %}
 <div>
   <div class="band-content">
     <div class="content-col">
       <div class="row no-gutters flex-nowrap">
         {% set hide_classes = ["", "", "d-none d-md-block", "d-none d-lg-block"] %}
-        {% for i in range(0,4) %}
+        {% for i in range(0,n) %}
           {% set relationship = books_finished[i] %}
           {% set hide_class = hide_classes[i] %}
           <div class="{{ hide_class }} col">

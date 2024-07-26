@@ -5,7 +5,7 @@ from book_club import db
 from book_club.models import Book, BookUserRel
 from book_club.forms import ReviewForm
 from book_club.aiapi import response_test
-from book_club.library import search_book, search_by_olid
+from book_club.library import search_book, search_by_olid, clean_description
 from book_club.utils import BookStatusEnum
 
 actions = Blueprint('actions', __name__)
@@ -120,7 +120,8 @@ def favourite_book():
                                                         BookUserRel.user==current_user).first()
 
         if current_user_relationship is not None:
-            current_user_relationship.favourite = True
+            old_favourite_status = current_user_relationship.favourite
+            current_user_relationship.favourite = not old_favourite_status
             
         db.session.commit()
 
@@ -141,7 +142,7 @@ def find_book():
         
         print(book_info)
         
-## ADD BOOK PAGE ##
+## ADD BOOK ##
 @actions.route('/add-book', methods=['GET', 'POST'])
 @login_required
 def add_book():
@@ -149,6 +150,8 @@ def add_book():
     if request.method == 'POST':
         
         olid = request.form.get('add')
+        
+        print(olid)
 
         book = Book.query.filter_by(olid=olid).first()
         exists = bool(book)
@@ -161,9 +164,8 @@ def add_book():
             book = Book(title=book_info["title"], 
                         author=book_info["author"], 
                         olid=book_info["olid"],
-                        cover_url_s=book_info["cover_url_s"], 
-                        cover_url_m=book_info["cover_url_m"],
-                        cover_url_l=book_info["cover_url_l"])
+                        description=clean_description(book_info["description"]),
+                        cover_url=book_info["cover_url"])
 
             db.session.add(book)
             flash(f'{book_info["title"]} added to book club!', category='success')

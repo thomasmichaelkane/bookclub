@@ -1,74 +1,64 @@
-{% extends "base.html" %}{% block title %}Book{% endblock %}
+{% extends "base.html" %}{% block title %}{{ book.title }}{% endblock %}
 
 {% block content %}
-
-<div class="container mt-5">
-  <div class="row">
-    <div class="col-md-2" style="min-width: 250px;">
-      <!-- Placeholder for book cover image -->
-      <img src="{{ book.cover_url_l }}", alt="cover" height="300">
-    </div>
-    <div class="col-md-7">
-      <div class="book-details">
-        <!-- Placeholder for book title -->
-        <h2 class="book-title-placeholder mb-3">{{ book.title }}</h2>
-        <!-- Placeholder for book author -->
-        <h4 class="book-author-placeholder mb-3">{{ book.author }}</h4>
-        {% if book.description is not none %}
-          <p class="description">
-            {{ book.description }}
-          </p>
-        {% endif %}
+  {% set relationships = current_user.book_relationships|selectattr("book", "eq", book) | list %}
+  {% if relationships | length != 0 %}
+    {% set relationship = relationships[0] %}
+  {% else %}
+    {% set relationship = none %}
+  {% endif %}
+  <div class="page-section">
+    <div class="logo-section"></div>
+    <div class="info-section">
+      <div class="row">
+        <div class="col-2" style="min-width: 250px;">
+          <img 
+            src="{{ book.cover_url }}" 
+            alt="cover" 
+            height="300"
+            onerror="this.onerror=null;this.src='/static/images/cover-blank.png';"
+          />
+        </div>
+        <div class="col">
+          <div class="band-content">
+            <div class="band-header">
+              <h2 class="text-literary">{{ book.title }}</h2>
+              <h4 class="text-literary">{{ book.author }}</h4>
+              <div class="status-section">
+                {{ render_partial('shared/partials/symbols/symbol_logic.html', relationship=relationship, text=true) }}
+              </div>
+              <div class="buttons-section">
+                {{ render_partial('shared/partials/buttons/button_logic.html', relationship=relationship, book=book) }}
+              </div>
+            </div>
+            <div class="header-end">
+              {% if book.average_rating != none %}
+                <div class="band-header-block d-inline-block">
+                  <h1>{{ book.average_rating | round(1)}}</h1>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="col-md-2">
-      <div class="rating">
-        {% if book.average_rating != None %}
-          {% set average_rating = book.average_rating | round(1) %}
-          <h1>{{ average_rating }}</h1>
-        {% else %}
-          <h1>-</h1>
-        {% endif %}
-      </div>
-      <div class="status">
-        {{ render_partial('shared/partials/symbols/symbol_logic.html', relationship=relationship) }}
-        {% if relationship.status == BookStatusEnum.FINISHED %}
-          <h3>Read</h3>
-          {% if relationship.favourite == False %}
-            {{ render_partial('shared/partials/buttons/favourite_book.html', book=book) }}
-          {% else %}
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-            </svg>
-          {% endif %}
-        {% elif relationship.status == BookStatusEnum.READING %}
-          <h3>Reading</h3>
-          {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}
-          {{ render_partial('shared/partials/buttons/shelve_book.html', book=book) }}
-        {% elif relationship.status == BookStatusEnum.WISHLIST %}
-          <h3>In wishlist</h3>
-          {{ render_partial('shared/partials/buttons/start_book.html', book=book) }}
-          {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}
-          {{ render_partial('shared/partials/buttons/shelve_book.html', book=book) }}
-        {% else %}
-          <h3>On shelf</h3>
-          {{ render_partial('shared/partials/buttons/wishlist_book.html', book=book) }}
-          {{ render_partial('shared/partials/buttons/start_book.html', book=book) }}
-          {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}
-        {% endif %}
-      </div>
+    <div class="description-section">
+      {% if book.description is not none %}
+        <p class="description">
+          {{ book.description }}
+        </p>
+      {% endif %}
     </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col">
-      <div class="reviews-section m-3">
-        <!-- Placeholder for reviews -->
+    <div class="reviews-section">
+      <div class="reviews-header">
+        <h2 class="text-literary">reviews</h2>
+      </div>
+      <div class="reviews-content-section">
         {% for relationship in book.user_relationships %}
           {% if relationship.review != None %} 
             <div class="row">
-              <div class="review-placeholder p-3">
-                <!-- Individual review placeholder -->
-                <a href="{{ url_for('views.user', user_id=relationship.user.id) }}" class="review-title-placeholder">{{ relationship.user.username }}</a>
+              <div class="content-element">
+                <a href="{{ url_for('views.user', user_id=relationship.user.id) }}" class="text-username">{{ relationship.user.username }}</a>
                 <div class="review-content-placeholder">{{ relationship.review }}</div>
               </div>
             </div>
@@ -77,33 +67,4 @@
       </div>
     </div>
   </div>
-</div>
-
-<!-- 
-{% if form != None %}
-<div class="review-write-section m-3">
-  {{ render_partial('shared/partials/forms/review_form.html', form=form) }}
-</div>
-{% endif %} -->
-
-
-
-
-<!-- </br>
-<div class="container">
-  <div class="card border-dark mb-3" style="max-width: 18rem;">
-    <div class="card-body text-dark">
-      <div class="row">
-        <div class="col">
-          <img src="{{ book.cover_url_l }}", alt="cover" width="100">
-        </div>
-        <div class="col">
-          <h3 class="card-title">{{ book.title }}</h3>
-          <h4 class="card-title">by {{ book.author }}</h4>
-        </div>
-      </div>
-    </div>
-    <div class="card-footer">Footer</div>
-  </div>
-</div> -->
 {% endblock %}

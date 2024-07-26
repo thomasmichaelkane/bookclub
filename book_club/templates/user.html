@@ -1,88 +1,73 @@
-{% extends "base.html" %}{% block title %}My Books{% endblock %}
+{% extends "base.html" %}{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
 
-{% set books_reading = user.book_relationships|selectattr("status", "eq", BookStatusEnum.READING) | list %}
-{% set n_books_reading = books_reading|length %}
-{% set books_wishlist = user.book_relationships|selectattr("status", "eq", BookStatusEnum.WISHLIST) | list %}
-{% set n_books_wish = books_wishlist|length %}
-{% set books_finished = user.book_relationships|selectattr("status", "eq", BookStatusEnum.FINISHED) | list %}
-{% set n_books_finished = books_finished|length %}
+  {% set books_reading = user.book_relationships|selectattr("status", "eq", BookStatusEnum.READING) | list %}
+  {% set n_books_reading = books_reading|length %}
+  {% set books_wishlist = user.book_relationships|selectattr("status", "eq", BookStatusEnum.WISHLIST) | list %}
+  {% set n_books_wish = books_wishlist|length %}
+  {% set books_finished = user.book_relationships|selectattr("status", "eq", BookStatusEnum.FINISHED) | list %}
+  {% set n_books_finished = books_finished|length %}
 
-<div class="page-section">
-  <div class="logo-section">
-    <h2 class="text-username">{{user.username}}</h2>
-  </div>
-  <div class="user-section">
-    hi
-  </div>
-  <div class="library-section">
-    <div class="books-section">
-
-      <!-- Nav tabs -->
-      <ul class="nav nav-pills">
-        <li class="nav-item">
-          <a class="nav-link active h3 nav-text" data-toggle="tab" href="#reading">Reading ({{ n_books_reading }})</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link h3 nav-text" data-toggle="tab" href="#wish">Wishlist ({{ n_books_wish }})</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link h3 nav-text" data-toggle="tab" href="#finished">Read ({{ n_books_finished }})</a>
-        </li>
-      </ul>
-  
-      <!-- Tab panes -->
-      <div class="tab-content">
-
-        <div class="tab-pane container active" id="reading">
-          <div class="reading-section">
-            <div class="row">
-              {% for relationship in books_reading %}
-                {{ render_partial('shared/partials/content_elements/book_std.html', book=relationship.book) }}
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-
-        <div class="tab-pane container active" id="wish">
-          <div class="wishlist-section">
-            <div class="row">
-              {% for relationship in books_wishlist %}
-                {{ render_partial('shared/partials/content_elements/book_std.html', book=relationship.book) }}
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-  
-        <div class="tab-pane container fade" id="finished">
-          <div class="read-section">
-            <div class="row">
-              {% for relationship in books_finished %}
-                {{ render_partial('shared/partials/content_elements/book_std.html', book=relationship.book) }}
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-      </div>
-      
+  <div class="page-section">
+    
+    <div class="logo-section">
+      <h2 class="text-username">{{ user.username }}</h2>
     </div>
-  </div>
-</div>
 
+    <div class="user-section"></div>
 
-<!-- <div class="row">
-  <div class="col-md-8">
-    {% set books_read = user.book_relationships|selectattr("status", "eq", BookStatusEnum.FINISHED) | list %}
-    {% set n_reviews = books_read|selectattr("review", "defined") | list | length %}
-    <div class="row h-75 w-100">
-      <div class="col">
-        <h3>Reviews written: {{ n_reviews }}</h3>
+    <div class="library-section">
+      <div class="books-section">
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a class="nav-link active h3 nav-text" data-toggle="tab" href="#reading">Reading ({{ n_books_reading }})</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link h3 nav-text" data-toggle="tab" href="#wish">Wishlist ({{ n_books_wish }})</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link h3 nav-text" data-toggle="tab" href="#finished">Read ({{ n_books_finished }})</a>
+          </li>
+        </ul>
+    
+        <!-- Tab panes -->
+        <div class="tab-content">
+
+          <div class="tab-pane container active" id="reading">
+            <div class="reading-section">
+              <div class="row">
+                {% for relationship in books_reading %}
+                  {{ render_partial('shared/partials/content_elements/book_std.html', book=relationship.book) }}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane container active" id="wish">
+            <div class="wishlist-section">
+              <div class="row">
+                {% for relationship in books_wishlist %}
+                  {{ render_partial('shared/partials/content_elements/book_std.html', book=relationship.book) }}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+    
+          <div class="tab-pane container fade" id="finished">
+            <div class="read-section">
+              <div class="row">
+                {% for relationship in books_finished %}
+                  {{ render_partial('shared/partials/content_elements/book_std.html', book=relationship.book) }}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
-</div> -->
-
-
-
 {% endblock %}

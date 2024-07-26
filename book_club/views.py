@@ -13,8 +13,9 @@ def home():
     
     users = User.query.all()
     books = Book.query.all()
+    articles = Article.query.all()
             
-    return render_template('home.html', users=users, books=books)
+    return render_template('home.html', users=users, books=books, articles=articles)
 
 ## BOOK PAGE ##
 @views.route('/book/<int:book_id>', methods=['GET', 'POST'])
@@ -29,6 +30,15 @@ def book(book_id):
     
     return render_template('book.html', book=book, form=form, relationship=current_user_relationship)
 
+## ARTICLE PAGE ##
+@views.route('/article/<int:article_id>', methods=['GET', 'POST'])
+@login_required
+def article(article_id):
+    
+    article = Article.query.get_or_404(article_id)
+
+    return render_template('article.html', article=article)
+
 ## USER PAGE ##
 @views.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
@@ -36,13 +46,13 @@ def user(user_id):
     
     user = User.query.get_or_404(user_id)
     
-    return render_template('user.html', user=user)
+    return render_template('user.html', user=user, title=user.username)
 
 ## MY LIBRARY PAGE ##
 @views.route('/my-library', methods=['GET', 'POST'])
 @login_required
 def my_library():
-    return render_template('user.html', user=current_user)
+    return render_template('user.html', user=current_user, title="My Library")
 
 ## SEARCH PAGE ##
 @views.route('/search', methods=['GET', 'POST'])
@@ -78,106 +88,3 @@ def articles():
     articles = Article.query.all()
 
     return render_template('articles.html', articles=articles)
-
-
-
-
-
-
-
-    # if book in current_user.books_read:
-        
-    # form = ReviewForm()
-    
-    #     if form.validate_on_submit():
-            
-    #         print("hi")
-
-    #         # review = Review(author=current_user, 
-    #         #                 book=book, 
-    #         #                 content=form.content.data)
-
-    #         # db.session.add(review)
-    #         # db.session.commit()
-
-    #         return render_template('book.html', book=book, form=form)
-        
-    # else:
-    #     form = None
-
-## BOOK METHODS ##
-
-
-# @views.route('/review-book', methods=['POST'])
-# @login_required
-# def review_book():
-    
-#     if request.method == 'POST':
-        
-#         book_id = request.form.get('review')
-#         book = Book.query.get_or_404(book_id)
-        
-
-
-
-
-
-    #     book_id = request.form.get('start')
-    #     ids_read = [book.id for book in current_user.books_read]
-    #     ids_reading = [book.id for book in current_user.books_reading]
-        
-    #     if not book_in_lists(book_id, [ids_read, ids_reading]):
-    #         print(f"book with id {book_id} not being read or already finished")
-    #         book = Book.query.get_or_404(book_id)
-    #         current_user.books_reading.append(book)
-    #         db.session.commit()
-            
-    # return render_template('/book.html')
-    # return redirect(url_for('views.home'))
-    # return render_template('home.html', user=current_user)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# @views.route('/search', methods=['GET'])
-# @login_required
-# def search(book_id):
-
-#     return render_template('search.html', title=book.title, book=book)
-# 
-
-    # form = BookForm()
-    # if form.validate_on_submit():
-    #     book = Book(title=form.title.data, author=form.author.data, reader=current_user)
-    #     db.session.add(book)
-    #     db.session.commit()
-    #     flash(f'{form.title.data} added to your reading list!', category='success')
-    #     return redirect(url_for('views.home'))
-    # return render_template('add_book.html', user=current_user, form=form)
-
-
-
-
-# @views.route('/delete-note', methods=['POST'])
-# def delete_note():
-#     note = json.loads(request.data)
-#     noteId = note['noteId']
-#     note = Note.query.get(noteId)
-#     if note:
-#         if note.user_id == current_user.id:
-#             db.session.delete(note)
-#             db.session.commit()
-    
-#     return jsonify({})

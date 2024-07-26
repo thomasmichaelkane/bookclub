@@ -1,0 +1,11 @@
+<div class="band-content">
+  <div class="band-header">
+    <a href="{{ url_for('views.article', article_id=article.id) }}" class="stretched-link"></a>
+    <div class="band-header-block d-inline-block">
+      <h2 class="text-literary">{{ article.title }}</h2>
+    </div>
+    <div class="band-header-block d-inline-block">
+      <h4 class="text-username">by {{ article.user.username }}</h4>
+    </div>
+  </div>
+</div>

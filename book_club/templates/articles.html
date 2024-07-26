@@ -1,18 +1,19 @@
-{% extends "base.html" %}{% block title %}Home{% endblock %}
+{% extends "base.html" %}{% block title %}Articles{% endblock %}
 
 {% block content %}
-<div class="page-section">
-  <div class="logo-section">
+  <div class="page-section">
+    <div class="logo-section">
       <h2 class="text-literary">articles</h2>
+    </div>
+    <div class="bands-section">
+      {% for i in range(0,5)%}
+        <div class="band article-band">
+          {% set article = articles[i] %}
+          {{ render_partial('shared/partials/headers/header_article.html', article=article) }}
+          {{ render_partial('shared/partials/bands/article_preview.html', article=article) }}
+        </div>
+      {% endfor %}
+    </div>
   </div>
-  <div class="bands-section">
-    {% for i in range(0,5)%}
-      <div class="band book-band">
-        {% set article = articles[i] %}
-        {{ render_partial('shared/partials/bands/article_blank.html', article=article) }}
-      </div>
-    {% endfor %}
-  </div>
-</div>
 {% endblock %}
 

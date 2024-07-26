@@ -15,7 +15,7 @@
         <div class="book-link-shade">
           <div class="review">
             <div class="book-cover-col">
-              {{ render_partial('shared/partials/content_elements/book_cover.html', book=relationship.book) }}
+              {{ render_partial('shared/partials/content_elements/thumbnail.html', image=relationship.book.cover_url) }}
             </div>
             <div class="content-col">
             {{ render_partial('shared/partials/content_elements/review_book.html', relationship=relationship) }}

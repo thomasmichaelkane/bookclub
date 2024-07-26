@@ -1,0 +1,25 @@
+<div class="band-content">
+  <div class="band-header">
+    <div class="band-header-block d-inline-block">
+      <h2 class="text-literary">{{ title }}</h2>
+    </div>
+    <div class="band-header-block d-inline-block">
+      <h4 class="text-literary">by {{ author }}</h4>
+    </div>
+  </div>
+  <div class="header-end">
+  {% if exists %}
+    <a href="{{ url_for('views.book', book_id=id) }}" class="stretched-link"></a>
+    <div class="band-header-block d-inline-block">
+      <h5 class="status-badge">
+        In library
+        <div class="ml-2">{{ render_partial('shared/partials/symbols/check.html', size=32) }}</div>
+      </h5>
+    </div>
+  {% else %}
+    <div class="band-header-block d-inline-block">
+      <div class="ml-2">{{ render_partial('shared/partials/buttons/add_book.html', olid=olid) }}</div>
+    </div>
+  {% endif %}
+  </div>
+</div>
