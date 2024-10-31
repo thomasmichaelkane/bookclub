@@ -9,7 +9,7 @@
   <p align="center">
     Social media site for sharing, reviewing, and reccomending books with friends.
     <br />
-    <a href="https://github.com/thomasmichaelkane/book_club"><strong>beta version</strong></a>
+    <a href="https://github.com/thomasmichaelkane/bookclub"><strong>see the docs</strong></a>
     <br />
     <br />
   </p>
