@@ -1,3 +1,13 @@
+button 
+{
+  border: none;
+  background: none;
+  color: inherit;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
 .read-button
 {
   width: 80px;
@@ -15,22 +25,29 @@
   padding-top: 20px;
 }
 
-
-button {
-  border: none;
-  background: none;
-  color: inherit;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
+.status-section 
+{
+  padding-bottom: 20px;
 }
 
-.status-badge {
+.status-badge-main 
+{
+  padding: 8px;
+  border-width: 3px;
+  border-color: #0e4b71;
+  color: #0e4b71;
+  border-radius: 10px;
+  border-style: solid;
+}
+
+.status-badge 
+{
   display: inline-flex;
   align-items: center;
 }
 
-.book {
+.book 
+{
   width: 200px;
   min-height: 350px;
   border: 0px;
@@ -40,7 +57,8 @@ button {
   transition: background-color 0.3s ease;
 }
 
-.book img {
+.book img 
+{
   width: 100%;
   height: 70%;
   max-height: 270px;
@@ -48,85 +66,118 @@ button {
   display: block;
 }
 
-.book-title {
+.book-title 
+{
   margin: 10px 0 5px 0;
   font-size: 1.2em;
   font-weight: bold;
   text-align: center;
 }
 
-.book-author {
+.book-author 
+{
   font-size: 1em;
   text-align: center;
 }
 
-.book:hover {
+.book:hover 
+{
   background-color: #f0f0f0;
 }
 
-.book-mini {
+.book-mini 
+{
   display: flex;
   padding: 10px;
   box-sizing: border-box;
   transition: background-color 0.3s ease;
 }
 
-.book-mini-review {
+.book-mini-review 
+{
   width: 100%;
   display: flex;
   padding: 10px;
   box-sizing: border-box;
 }
 
-.book-mini-review-info {
+.book-mini-review-info 
+{
   display: inline-block;
   width: 300px;
   margin-right: 10px;
 }
 
-.book-mini img {
+.book-mini img 
+{
   width: 100px;
   height: 150px;
   object-fit: cover;
   margin-right: 10px;
 }
 
-.book-mini-review img {
+.book-mini-review img 
+{
   width: 100px;
   height: 150px;
   object-fit: cover;
 }
 
-.book-link-shade {
+.book-link-shade 
+{
   transition: background-color 0.3s ease;
 }
 
-.book-mini-title {
+.book-mini-title 
+{
   margin: 0 0 5px 0;
   font-size: 1em;
   font-weight: bold;
 }
 
-.book-mini-author {
+.book-mini-author 
+{
   font-size: 0.9em;
 }
 
-.book-link-shade:hover {
+.book-link-shade:hover 
+{
   background-color: #99b8b3;
 }
 
-.book-cover {
+.book-cover 
+{
   display: flex;
   box-sizing: border-box
 }
 
-.book-cover img {
+.book-cover img 
+{
   height: 240px;
   object-fit: cover;
   max-width: 240px;
 }
 
-.user-review {
+.user-review 
+{
   display: block;
   box-sizing: border-box;
+}
+
+.btn-move 
+{
+  background-color: var(--user-review-band);
+  color: #ffffff;
+  border: none;
+  filter: brightness(1);
+  transition: filter 0.3s ease;
+}
+
+.btn-move:hover,
+.btn-move:focus,
+.btn-move:active 
+{
+  filter: brightness(1.2);
+  color: #ffffff;
+  border: none;
 }

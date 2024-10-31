@@ -9,62 +9,44 @@
   --book-text: #ffffff;
 }
 
-.form-search {
-  display: inline-block;
-  width: 45%;
-  padding-right: 10px;
+.text-username 
+{
+  font-family: "Lucida Console", "Courier New", monospace;
 }
 
-.bands-section {
+.text-literary 
+{
+  font-family: "Georgia", Times, serif;
+}
+
+.page-content
+{
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.bands-section 
+{
   min-width: 100px;
 }
 
-.user-section {
-  padding-bottom: 25px;
-}
-
-
-.finished-block
+.band-header 
 {
-  background-color: darkgreen;
-}
-
-.nav-text {
-  color:rgb(5, 84, 78)
-}
-
-.nav-pills > li > a.active {
-  background-color:rgb(5, 84, 78) !important;
-}
-
-.reading-block
-{
-  background-color: darkgoldenrod;
-}
-
-.logo-section {
-  padding-top: 25px;
-  padding-bottom: 10px;
-  color:rgb(5, 84, 78)
-}
-
-.band-header {
   width: 100%;
 }
 
-.band-header-block {
+.band-header-block 
+{
   padding-top: 10px;
   padding-left: 10px;
   padding-right: 5px;
 }
 
-.band-content {
+.band-content 
+{
   display: flex;
   padding: 5px;
-}
-
-.review {
-  display: flex;
 }
 
 .band-row
@@ -73,54 +55,65 @@
   padding-bottom: 5px;
 }
 
-.main-col {
+.band
+{
+  color: rgb(255, 255, 255);
+  transition: all .2s ease-in-out;
+  margin-bottom: 5px;
+  min-height: 150px;
+  position: relative;
+}
+
+.band:hover 
+{ 
+  transform: scale(1.05);
+  z-index: 3000;
+}
+
+.user-section 
+{
+  padding-bottom: 25px;
+}
+
+.logo-section 
+{
+  padding-top: 25px;
+  padding-bottom: 10px;
+  color:rgb(5, 84, 78)
+}
+
+.review 
+{
+  display: flex;
+}
+
+.main-col 
+{
   width: 100%;
 }
 
-.header-end {
+.header-end 
+{
   width: 200px;
   display: flex;
   justify-content: right;
 }
 
-.content-element {
+.content-element 
+{
   padding: 10px;
 }
 
-.band {
-  color: rgb(255, 255, 255);
-  transition: all .2s ease-in-out;
-  margin-bottom: 5px;
-}
-
-.text-username {
-  font-family: "Lucida Console", "Courier New", monospace;
-}
-
-.text-literary {
-  font-family: "Georgia", Times, serif;
-}
-
-.stretched-link:link { 
+.stretched-link:link 
+{ 
   color: rgb(255, 255, 255);
 }
 
-.stretched-link​:hover { 
+.stretched-link​:hover 
+{ 
   color: rgb(146, 180, 146);
   text-decoration: none;
 }
-
-.band:hover { 
-  transform: scale(1.05);
-  z-index: 3000;
-}
-
-.band
-{
-  min-height: 150px;
-  position: relative;
-}
-
 
 .user-band
 {
@@ -152,11 +145,22 @@
   background-color: var(--article-band);
 }
 
-.page-content
+.finished-block
 {
-  margin-top: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
+  background-color: darkgreen;
+}
+
+.reading-block
+{
+  background-color: darkgoldenrod;
+}
+
+.nav-text {
+  color:rgb(5, 84, 78)
+}
+
+.nav-pills > li > a.active {
+  background-color:rgb(5, 84, 78) !important;
 }
 
 .grid-container
@@ -174,4 +178,10 @@
   line-clamp: 7;
   -webkit-box-orient: vertical;
   margin: 20px auto;
+}
+
+.form-search {
+  display: inline-block;
+  width: 45%;
+  padding-right: 10px;
 }

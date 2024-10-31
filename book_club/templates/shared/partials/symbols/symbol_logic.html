@@ -1,6 +1,9 @@
+{% if text == true %}
+    {% set text_class = "status-badge-main" %} 
+{% endif %}
 {% if relationship.status == BookStatusEnum.WISHLIST %}
     <div class="band-header-block d-inline-block">
-        <h3 class="status-badge">
+        <h3 class="status-badge {{text_class}}">
             {% if text == true %}
                 Wishlist
             {% endif %}
@@ -9,7 +12,7 @@
     </div>
 {% elif relationship.status == BookStatusEnum.READING %}
     <div class="band-header-block d-inline-block">
-        <h3 class="status-badge">
+        <h3 class="status-badge {{text_class}}">
             {% if text == true %}
                 Reading
             {% endif %}
@@ -18,7 +21,7 @@
     </div>
 {% elif relationship.status == BookStatusEnum.FINISHED %}
     <div class="band-header-block d-inline-block">
-        <h3 class="status-badge">
+        <h3 class="status-badge {{text_class}}">
             {% if text == true %}
                 Read
             {% endif %}

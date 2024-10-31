@@ -1,4 +1,4 @@
-<div class="btn-group">
+<div>
     {% if relationship.status == BookStatusEnum.FINISHED %}
     {% elif relationship.status == BookStatusEnum.READING %}
         {{ render_partial('shared/partials/buttons/finish_book.html', book=book) }}

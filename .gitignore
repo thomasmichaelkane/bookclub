@@ -2,7 +2,6 @@
 /_archive
 __pycache__/
 *.py[cod]
-json
 instance
 /secrets.txt
 /apikey.txt

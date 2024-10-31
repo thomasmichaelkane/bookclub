@@ -53,6 +53,12 @@
       <div class="reviews-header">
         <h2 class="text-literary">reviews</h2>
       </div>
+      {% if relationship.status == BookStatusEnum.FINISHED and relationship.review == None %}
+        <div class="reviews-me-section">
+          <a href="{{ url_for('views.user', user_id=current_user.id) }}" class="text-username">{{ current_user.username }}</a>
+          {{ render_partial('shared/partials/forms/review_form.html', form=form) }}
+        </div>
+      {% endif %}
       <div class="reviews-content-section">
         {% for relationship in book.user_relationships %}
           {% if relationship.review != None %} 

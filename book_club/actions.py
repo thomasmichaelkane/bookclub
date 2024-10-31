@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 import requests
 from book_club import db
@@ -10,8 +10,7 @@ from book_club.utils import BookStatusEnum
 
 actions = Blueprint('actions', __name__)
 
-
-## WISHLIST BOOK ##
+## WISHLIST BOOK ROUTE ##
 @actions.route('/wishlist-book', methods=['POST'])
 @login_required
 def wishlist_book():
@@ -33,7 +32,7 @@ def wishlist_book():
     
         return render_template('/book.html', book=book, form=None, relationship=current_user_relationship)
     
-## START BOOK ##
+## START BOOK ROUTE ##
 @actions.route('/start-book', methods=['POST'])
 @login_required
 def start_book():
@@ -58,7 +57,7 @@ def start_book():
     
         return render_template('book.html', book=book, form=None, relationship=current_user_relationship)
 
-## FINISH BOOK ##
+## FINISH BOOK ROUTE ##
 @actions.route('/finish-book', methods=['POST'])
 @login_required
 def finish_book():
@@ -81,10 +80,10 @@ def finish_book():
         db.session.commit()
         
         form = ReviewForm()
-    
-        return render_template('book.html', book=book, form=form, relationship=current_user_relationship)
 
-## SHELVE BOOK ##
+        return redirect(url_for('views.book'))
+
+## SHELVE BOOK ROUTE ##
 @actions.route('/shelve-book', methods=['POST'])
 @login_required
 def shelve_book():
@@ -103,9 +102,9 @@ def shelve_book():
             
         db.session.commit()
 
-        return render_template('book.html', book=book, form=None, relationship=current_user_relationship)
+        return redirect(url_for('views.book'))
     
-## FAVOURITE BOOK ##
+## FAVOURITE BOOK ROUTE ##
 @actions.route('/favourite-book', methods=['POST'])
 @login_required
 def favourite_book():
@@ -125,9 +124,9 @@ def favourite_book():
             
         db.session.commit()
 
-        return render_template('book.html', book=book, form=None, relationship=current_user_relationship)
+        return redirect(url_for('views.book', book=book))
 
-## API BOOK ##
+## FIND BOOK ROUTE ##
 @actions.route('/find-book', methods=['POST'])
 @login_required
 def find_book():
@@ -138,11 +137,10 @@ def find_book():
         rec_title = rec_info[0]
         rec_author = rec_info[1]
         
-        book_info = search_book(rec_title, rec_author)
+        _ = search_book(rec_title, rec_author)
         
-        print(book_info)
         
-## ADD BOOK ##
+## ADD BOOK ROUTE ##
 @actions.route('/add-book', methods=['GET', 'POST'])
 @login_required
 def add_book():
@@ -151,12 +149,8 @@ def add_book():
         
         olid = request.form.get('add')
         
-        print(olid)
-
         book = Book.query.filter_by(olid=olid).first()
         exists = bool(book)
-        
-        print(exists)
         
         if exists is not True:
         
@@ -174,7 +168,7 @@ def add_book():
 
         return render_template('book.html', book=book, form=None, current_user_relationship=None)
 
-## GPT RECCOMEND ##
+## GPT RECCOMEND ROUTE ##
 @actions.route('/gpt-reccomend', methods=['POST'])
 @login_required
 def gpt_reccomend():
@@ -185,7 +179,7 @@ def gpt_reccomend():
     
     return render_template('reccomend.html', user=current_user, response=response)
 
-## API TEST ##
+## API TEST ROUTE ##
 @actions.route('/lotr_test', methods=['GET', 'POST'])
 def lotr_test():
     

@@ -5,7 +5,6 @@ def run():
     
     books_api_info = import_book_titles_json("book-data-raw.json")
     
-
     books_info_from_olid = [search_by_olid(book["olid"]) for book in books_api_info] 
     
     save_book_json(books_info_from_olid, "book-data.json")

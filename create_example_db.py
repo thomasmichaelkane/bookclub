@@ -42,7 +42,7 @@ def dummy_users():
 
 def admin_user():
     
-    admin_hashed_password = bcrypt.generate_password_hash("yatch").decode('utf-8')
+    admin_hashed_password = bcrypt.generate_password_hash("hello").decode('utf-8')
     admin = User(email="admin@example.com", 
                     username="admin", 
                     password=admin_hashed_password)

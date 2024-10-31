@@ -4,6 +4,7 @@ from openai import OpenAI
 from book_club import app
 import re
 
+## RECCOMEND FROM CURRENT READING LIST ##
 def create_by_reading_prompt():
     
     books = []
@@ -17,35 +18,8 @@ def create_by_reading_prompt():
     + (", ".join(books)) + ".")
     
     print(prompt)
-    
-def gpt_test():
-   
-    client = OpenAI(api_key=app)
-   
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "user", "content": "Say this is a test"}
-        ]
-    )
-    
-    print(response)
-    
-def rec_test():
-        
-    client = OpenAI(api_key=app.config['API_KEY'])
-   
-    example_prompt = 'Can you recommend me three books based on the list of books that I\'m currently reading. The books I\'m currently read are: "1984" by "george orwell", "on the road" by "jack kerouac". In your response can you wrap each section in an appropriate tag, for example <intro>, <title>, <author>, <description>, and <outro>.'
-    
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "user", "content": example_prompt}
-        ]
-    )
-    
-    print(response.choices[0].message.content)
-    
+
+## GET OPENAI RESPONSE ##
 def openai_recomend(prompt):
    
     client = OpenAI(api_key=app.config['API_KEY'])
@@ -58,23 +32,8 @@ def openai_recomend(prompt):
     )
     
     print(response)
-    
-def response_test():
-    
-    response = example_response()
-    
-    response_data = extract_response_data(response)
-    
-    print(response_data)
-    
-    return response_data
-    
-def example_response():
-    
-    response = '<intro>\nBased on the books you\'re currently reading, I recommend the following three books:\n</intro>\n\n<title>\n"The Catcher in the Rye"\n</title>\n<author>\nby J.D. Salinger\n</author>\n<description>\nThis classic novel follows the story of Holden Caulfield as he navigates the challenges of adolescence and the complexities of growing up. Much like "On the Road," this book delves into themes of rebellion and the search for meaning in a conformist society.\n</description>\n\n<title>\n"Brave New World"\n</title>\n<author>\nby Aldous Huxley\n</author>\n<description>\nIn this dystopian novel, Huxley explores a world where technology, consumerism, and social conditioning reign supreme. Much like "1984," this book offers a thought-provoking look at the dangers of a totalitarian regime and the loss of individuality.\n</description>\n\n<title>\n"Fear and Loathing in Las Vegas"\n</title>\n<author>\nby Hunter S. Thompson\n</author>\n<description>\nThis gonzo journalism classic follows the wild and drug-fueled adventures of Raoul Duke and his attorney, Dr. Gonzo, as they journey through Las Vegas. Like "On the Road," this book captures the spirit of rebellion and the quest for authenticity in a world of artificiality.\n</description>\n\n<outro>\nI hope you enjoy these book recommendations based on your current reading list!\n</outro>'
 
-    return response
-
+## EXTRACT DATA FROM OPENAI RESPONSE ##
 def extract_response_data(response):
     
     recs = []
@@ -107,6 +66,7 @@ def extract_response_data(response):
         
     return intro, outro, recs
 
+## EXTRACT TAGGED FROM OPENAI RESPONSE ##
 def find_tagged_sections(name, string):
     
     start_tag = "<" + name + ">"
@@ -124,5 +84,54 @@ def find_tagged_sections(name, string):
     sections =  [string[s:e] for (s, e) in sec_indices]
     
     return sections
+
+## TESTS ----------------------------------------------------------------
         
+## OPENAI CLIENT TEST ##
+def gpt_test():
+   
+    client = OpenAI(api_key=app)
+   
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": "Say this is a test"}
+        ]
+    )
+    
+    print(response)
+    
+## RECCOMENDATION TEST ##
+def rec_test():
+        
+    client = OpenAI(api_key=app.config['API_KEY'])
+   
+    example_prompt = 'Can you recommend me three books based on the list of books that I\'m currently reading. The books I\'m currently read are: "1984" by "george orwell", "on the road" by "jack kerouac". In your response can you wrap each section in an appropriate tag, for example <intro>, <title>, <author>, <description>, and <outro>.'
+    
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": example_prompt}
+        ]
+    )
+    
+    print(response.choices[0].message.content)
+
+## EXAMPLE RESPONSE TEST ##
+def response_test():
+    
+    response = example_response()
+    
+    response_data = extract_response_data(response)
+    
+    print(response_data)
+    
+    return response_data
+
+## EXAMPLE RESPONSE ##
+def example_response():
+    
+    response = '<intro>\nBased on the books you\'re currently reading, I recommend the following three books:\n</intro>\n\n<title>\n"The Catcher in the Rye"\n</title>\n<author>\nby J.D. Salinger\n</author>\n<description>\nThis classic novel follows the story of Holden Caulfield as he navigates the challenges of adolescence and the complexities of growing up. Much like "On the Road," this book delves into themes of rebellion and the search for meaning in a conformist society.\n</description>\n\n<title>\n"Brave New World"\n</title>\n<author>\nby Aldous Huxley\n</author>\n<description>\nIn this dystopian novel, Huxley explores a world where technology, consumerism, and social conditioning reign supreme. Much like "1984," this book offers a thought-provoking look at the dangers of a totalitarian regime and the loss of individuality.\n</description>\n\n<title>\n"Fear and Loathing in Las Vegas"\n</title>\n<author>\nby Hunter S. Thompson\n</author>\n<description>\nThis gonzo journalism classic follows the wild and drug-fueled adventures of Raoul Duke and his attorney, Dr. Gonzo, as they journey through Las Vegas. Like "On the Road," this book captures the spirit of rebellion and the quest for authenticity in a world of artificiality.\n</description>\n\n<outro>\nI hope you enjoy these book recommendations based on your current reading list!\n</outro>'
+
+    return response
         
