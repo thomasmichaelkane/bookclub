@@ -54,4 +54,15 @@ class ReviewForm(FlaskForm):
                           validators=[DataRequired()])
     submit = SubmitField('Post')
     
+## CLUB CREATE FORM ##
+class ClubCreateForm(FlaskForm):
+    name = StringField('Name',
+                        validators=[DataRequired()])
+    submit = SubmitField('Create')
+    
+## CLUB JOIN FORM ##
+class ClubJoinForm(FlaskForm):
+    join_code = StringField('Code',
+                        validators=[DataRequired()])
+    submit = SubmitField('Join')
    

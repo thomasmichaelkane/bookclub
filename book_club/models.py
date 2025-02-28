@@ -31,13 +31,15 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     book_relationships = db.relationship('BookUserRel', backref='user')
+    club_relationships = db.relationship('ClubUserRel', backref='user')
     articles = db.relationship('Article', backref='user')
-    # clubs = db.relationship('Club', secondary = 'user_club', back_populates = 'user')
+    # clubs = db.relationship('Club', secondary='user_club', back_populates='user')
+    # clubs_as_admin = db.relationship('Club', secondary='user_club', back_populates='user')
     
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
 
-## RELATIONSHIPS ##
+## BOOK USER RELATIONSHIPS ##
 class BookUserRel(db.Model):
     _name__ = "book_user_rel"
     id = db.Column(db.Integer, primary_key=True)
@@ -68,16 +70,33 @@ class Article(db.Model):
 
 ## CLUBS ## (to implement)
 
-# class Club(db.Model):
-#     _name__ = "club"
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(30), unique=True, nullable=False)
-#     users = db.relationship('User', secondary = 'user_club', back_populates = 'club')
+class Club(db.Model):
+    _name__ = "club"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True, nullable=False)
+    join_code = db.Column(db.String(5), unique=True, nullable=False)
+    # admin_user = db.Column(db...
+    date_created = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    user_relationships = db.relationship('ClubUserRel', backref='club')
+    # users = db.relationship('User', secondary='user_club', back_populates='club')
+    size_users = db.Column(db.Integer, default=None)
+    size_books = db.Column(db.Integer, default=None)
     
-#     def __repr__(self):
-#       return f"Club('{self.name}', '{self.users}')"
+    def __repr__(self):
+      return f"Club('{self.name}' ['{self.size_users}' Users], '{self.users}')"
+  
+## BOOK USER RELATIONSHIPS ##
+class ClubUserRel(db.Model):
+    _name__ = "club_user_rel"
+    id = db.Column(db.Integer, primary_key=True)
+    date_joined = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    club_id = db.Column(db.Integer, db.ForeignKey('club.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    def __repr__(self):
+      return f"ClubUserRel('{self.club.name}', '{self.user.username}')"
 
-# #join table
+# ## CLUB USER TABLE ##
 # user_club = db.Table(
 #   'user_club',
 #   db.Column('user_id', db.Integer, db.ForeignKey('user.id')),

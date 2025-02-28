@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
 from book_club.models import Book, User, BookUserRel, Article
-from book_club.forms import BookForm, ReviewForm
+from book_club.forms import BookForm, ReviewForm, ClubJoinForm, ClubCreateForm
 from book_club.library import search_book
 from book_club import db
 
@@ -12,11 +12,20 @@ views = Blueprint('views', __name__)
 @login_required
 def home():
     
-    users = User.query.all()
-    books = Book.query.all()
-    articles = Article.query.all()
-            
-    return render_template('home.html', users=users, books=books, articles=articles)
+    has_membership = len(current_user.club_relationships) > 0
+    join_form, create_form = ClubJoinForm(), ClubCreateForm()
+    
+    if not has_membership:
+        
+        return render_template('start.html', join_form=join_form, create_form=create_form)#, users=users, books=books, articles=articles)
+    
+    else:
+    
+        users = User.query.all()
+        books = Book.query.all()
+        articles = Article.query.all()
+                
+        return render_template('home.html', users=users, books=books, articles=articles)
 
 ## BOOK PAGE ROUTE ##
 @views.route('/book/<int:book_id>', methods=['GET', 'POST'])

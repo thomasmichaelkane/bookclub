@@ -2,13 +2,65 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 import requests
 from book_club import db
-from book_club.models import Book, BookUserRel
-from book_club.forms import ReviewForm
+from book_club.models import Book, BookUserRel, Club, ClubUserRel
+from book_club.genesis import create_club
+from book_club.forms import ReviewForm, ClubJoinForm, ClubCreateForm
 from book_club.aiapi import response_test
 from book_club.library import search_book, search_by_olid, clean_description
 from book_club.utils import BookStatusEnum
 
 actions = Blueprint('actions', __name__)
+
+## NEW CLUB ROUTE ##
+@actions.route('/new-club', methods=['POST'])
+@login_required
+def new_club():
+    
+    form = ClubCreateForm()
+    
+    if form.validate_on_submit():
+        
+        club = Club.query.filter_by(name=form.name.data).first() 
+        exists = bool(club)
+        
+        if exists is not True:
+        
+            new_club = create_club(form=form)
+            new_club_rel = ClubUserRel(user=current_user, club=new_club)
+            db.session.add(new_club_rel)
+            db.session.commit()
+            
+            flash(f'{form.name.data} created!', category='success')
+            return redirect(url_for('views.home'))
+        
+        else:
+            
+            flash(f'{club.name} name already taken', category='error')
+   
+## JOIN CLUB ROUTE ##
+@actions.route('/join-club', methods=['POST'])
+@login_required
+def join_club():
+    
+    form = ClubJoinForm()
+    
+    if form.validate_on_submit():
+        
+        club = Club.query.filter_by(name=form.code.data).first() 
+        exists = bool(club)
+        
+        if exists is True:
+        
+            new_club_rel = ClubUserRel(user=current_user, club=club)
+            db.session.add(new_club_rel)
+            
+            flash(f'You joined {club.name}!', category='success')
+            return redirect(url_for('views.home'))
+        
+        else:
+            
+            flash(f'{club.name} does not exist', category='error')
+            
 
 ## WISHLIST BOOK ROUTE ##
 @actions.route('/wishlist-book', methods=['POST'])

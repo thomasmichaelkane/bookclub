@@ -89,7 +89,7 @@ def add_relationship_random(user, book):
 
 def load_book_data():
     
-    books_api_info = import_book_json("book-data.json")
+    books_api_info = import_book_json("book-data-raw.json")
     
     books = [Book(title=book_info["title"], 
                 author=book_info["author"], 

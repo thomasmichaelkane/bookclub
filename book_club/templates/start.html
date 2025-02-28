@@ -1,0 +1,44 @@
+{% extends "base.html" %}{% block title %}Home{% endblock %}
+
+{% block content %}
+  <div class="page-section">
+    <div class="logo-section">
+      <h2 class="text-literary">Let's start</h2>
+    </div>
+    <div class="books-section">
+
+      <!-- Nav tabs -->
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link active h3 nav-text" data-toggle="tab" href="#create">Create</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link h3 nav-text" data-toggle="tab" href="#join">Join</a>
+        </li>
+      </ul>
+  
+      <!-- Tab panes -->
+      <div class="tab-content">
+
+        <div class="tab-pane container active" id="create">
+          <div class="reading-section">
+            <div class="row">
+              {{ render_partial('shared/partials/forms/create_club_form.html', form=create_form) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane container" id="join">
+          <div class="wishlist-section">
+            <div class="row">
+              {{ render_partial('shared/partials/forms/join_club_form.html', form=join_form) }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+

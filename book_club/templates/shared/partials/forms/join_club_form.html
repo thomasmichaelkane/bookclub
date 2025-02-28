@@ -1,0 +1,28 @@
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="row">
+        <div class="col-11">
+            <fieldset class="form-group">
+                <div class="form-search form-group">
+                    {{ form.join_code.label(class="form-control-label") }}
+        
+                    {% if form.join_code.errors %}
+                        {{ form.join_code(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.join_code.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %} 
+                        {{ form.join_code(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-1">
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </div>
+    </div>
+</form>

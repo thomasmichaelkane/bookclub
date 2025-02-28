@@ -88,6 +88,7 @@ def clean_description(old_description):
 def get_book_info_olid(result):
     
     title = result["title"]
+    print(title + " DONE")
     author_str = result["authors"][0]["author"]["key"]
     
     author_key = get_author_key_from_str(author_str)
@@ -98,7 +99,7 @@ def get_book_info_olid(result):
     
     try:
         description = result["description"]
-        print(len(description))
+        # print(len(description))
         if isinstance(description, dict):
             description = description["value"]
             
@@ -119,7 +120,7 @@ def get_book_info_olid(result):
     book_info = {"title": title, 
                 "author": author,
                 "olid": olid,
-                "description": description ,
+                "description": description,
                 "cover_url": cover_url}
     
     return book_info
